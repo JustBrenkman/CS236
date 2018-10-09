@@ -56,12 +56,12 @@ public:
                 case TERM_SINGLE:
                     if (ta == term.singularity) {
                         pos++;
-                        return true;
                     }
                     break;
                 case GRAMMAR:
-                    if (term.grammer->proccessTerm(ta))
+                    if (term.grammer->proccessTerm(ta)) {
                         pos++;
+                    }
                     break;
                 case EPSOLON:
 
@@ -73,8 +73,7 @@ public:
                     throw std::string("Error");
             }
 
-            // Default return is false, only on return true does it increment. A exception is thrown when an error
-            return false;
+            return pos >= terms.size();
         }
     };
 private:
@@ -85,11 +84,14 @@ public:
     // Proocess an input, if there isn't a possible to add it will throw an error
     bool proccessTerm(T &t) {
 
-        if (pos > listOfTerms.size())
+        if (pos >= listOfTerms.size())
             throw std::string("Error - out of bounds");
 
-        if (!listOfTerms.at(pos)->isTermValid(t))
+        if (listOfTerms.at(pos)->isTermValid(t)) {
             pos++;
+            if (pos > listOfTerms.size())
+                return true;
+        }
 
         return false;
     }
