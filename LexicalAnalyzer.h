@@ -1,6 +1,7 @@
 #ifndef LEXICAL_ANALYZER_H
 #define LEXICAL_ANALYZER_H
 
+#include <iostream>
 #include "FiniteStateMachine.h"
 
 /*******************************************************************************************
@@ -927,6 +928,7 @@ public:
 
     // Friend mehtod for generating printing the lexical analyzer
     friend std::ostream& operator<<(std::ostream& os, LexicalAnalyzer lex) {
+//        os << "Printing the lexical analyzer..." << std::endl;
         os << lex.toString();
         return os;
     }
@@ -1026,6 +1028,12 @@ public:
         fsm->clean();
         delete fsm;
     }
+
+
+    std::vector<token_struct> getTokenList() {
+        return listOfTokens;
+    }
+
     ~LexicalAnalyzer() = default;
 };
 

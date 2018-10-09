@@ -14,6 +14,8 @@
 #define LAB2_GRAMMAR_H
 
 #include <vector>
+#include "LexicalAnalyzer.h"
+#include <iostream>
 
 template<typename T>
 class Grammar {
@@ -26,39 +28,80 @@ public:
     template<typename Ta>
     class Term {
     public:
-        enum TERM_TYPE {TERM_SINGLE, GRAMMAR};
+        enum TERM_TYPE {
+            TERM_SINGLE, GRAMMAR, EPSOLON, LAMBDA
+        };
         struct term_struct {
             TERM_TYPE type;
-            Ta& singularity;
+            Ta singularity;
             Grammar<Ta>* grammer;
         };
     private:
         std::vector<term_struct> terms;
-        typedef typename std::vector<term_struct>::iterator itr;
+        int pos = 0;
     public:
         void addEntry(TERM_TYPE type, Ta item, Grammar<Ta>* gram) {
             term_struct entry {type, item, gram};
-//            entry.type = type;
-//            entry.singularity = item;
-//            entry.grammer = gram;
             // Push the newly added entry to the list
             terms.push_back(entry);
         }
 
-        bool isTermValid() {
+        bool isTermValid(Ta &ta) {
+            if (pos >= terms.size())
+                return true;
 
+            term_struct term = terms.at(pos);
+
+            switch (term.type) {
+                case TERM_SINGLE:
+                    if (ta == term.singularity) {
+                        pos++;
+                        return true;
+                    }
+                    break;
+                case GRAMMAR:
+                    if (term.grammer->proccessTerm(ta))
+                        pos++;
+                    break;
+                case EPSOLON:
+
+                    break;
+                case LAMBDA:
+
+                    break;
+                default:
+                    throw std::string("Error");
+            }
+
+            // Default return is false, only on return true does it increment. A exception is thrown when an error
+            return false;
         }
     };
 private:
     std::vector<Term<T>*> listOfTerms;
-    typedef typename std::vector<Term<T>*>::iterator itr;
+    int pos = 0;
+
 public:
     // Proocess an input, if there isn't a possible to add it will throw an error
-    void proccessTerm(T& t);
+    bool proccessTerm(T &t) {
+
+        if (pos > listOfTerms.size())
+            throw std::string("Error - out of bounds");
+
+        if (!listOfTerms.at(pos)->isTermValid(t))
+            pos++;
+
+        return false;
+    }
+
+    void addTermToGrammar(Term<T> *term) {
+        listOfTerms.push_back(term);
+    }
 
     // Creates a new grammar and returns the pointer
-    static Grammar<T>* createGrammar(Term<T>* term, ...) {
-        return new Grammar<T>();
+    static Grammar<T> *createGrammar() {
+        auto *gram = new Grammar<T>;
+        return gram;
     }
     // Creates a new Term and returns the pointer
     static Term<T>* createTerm() {

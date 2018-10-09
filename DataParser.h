@@ -13,11 +13,10 @@ private:
     LexicalAnalyzer* lexicalAnalyzer;
     Grammar<LexicalAnalyzer::TOKEN>* datalogGrammar;
     std::vector<Grammar<LexicalAnalyzer::TOKEN*>> listOfGrammars; // This will keep track of the grammars
-
 public:
     explicit DataParser(LexicalAnalyzer* lexicalAnalyzer);
 
-    bool isValid();
+    void checkValidity();
 
     ~DataParser();
 };
