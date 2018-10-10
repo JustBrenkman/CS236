@@ -29,7 +29,7 @@ public:
     class Term {
     public:
         enum TERM_TYPE {
-            TERM_SINGLE, GRAMMAR, EPSOLON, LAMBDA
+            TERMINAL, GRAMMAR, EPSOLON, LAMBDA
         };
         struct term_struct {
             TERM_TYPE type;
@@ -53,7 +53,7 @@ public:
             term_struct term = terms.at(pos);
 
             switch (term.type) {
-                case TERM_SINGLE:
+                case TERMINAL:
                     if (ta == term.singularity) {
                         pos++;
                     }
@@ -75,6 +75,44 @@ public:
 
             return pos >= terms.size();
         }
+
+        bool isTermValid(std::vector<Ta> &ta, int &index) {
+            int position = 0;
+
+            for (; index < ta.size(); index++) {
+
+                if (position >= terms.size())
+                    return true;
+
+                term_struct term = terms.at(position);
+
+                switch (term.type) {
+                    case TERMINAL:
+                        if (ta.at(index) == term.singularity) {
+                            position++;
+                        }
+                        break;
+                    case GRAMMAR:
+                        if (term.grammer->proccessList(ta, index)) {
+                            position++;
+                        }
+                        break;
+                    case EPSOLON:
+
+                        break;
+                    case LAMBDA:
+
+                        break;
+                    default:
+                        throw std::string("Error - not expecting");
+                }
+
+                if (position >= terms.size())
+                    return true;
+            }
+
+            return false;
+        }
     };
 private:
     std::vector<Term<T>*> listOfTerms;
@@ -95,6 +133,24 @@ public:
 
         return false;
     }
+
+    bool proccessList(std::vector<T> &t, int &index) {
+        int position = 0;
+
+        for (; index < t.size();) {
+            if (position > listOfTerms.size())
+                throw std::string("Error - out of bounds");
+
+            if (listOfTerms.at(position)->isTermValid(t, index)) {
+                //index++;
+                if (position > listOfTerms.size())
+                    return true;
+
+                position++;
+            }
+        }
+    }
+
 
     void addTermToGrammar(Term<T> *term) {
         listOfTerms.push_back(term);
