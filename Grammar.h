@@ -78,23 +78,35 @@ public:
 
         bool isTermValid(std::vector<Ta> &ta, int &index) {
             int position = 0;
+            bool passes = true;
 
-            for (; index < ta.size(); index++) {
+            std::cout << "Term definition: " << std::endl;
 
-                if (position >= terms.size())
-                    return true;
+//            for (auto &te : terms) {
+//                std::cout << te.
+//            }
+
+            for (; position < terms.size(); position++) {
 
                 term_struct term = terms.at(position);
 
                 switch (term.type) {
                     case TERMINAL:
+                        std::cout << "Proccessing Terminal: " << LexicalAnalyzer::enumToString(ta.at(index))
+                                  << ", index: " << index << ", position: " << position << std::endl;
                         if (ta.at(index) == term.singularity) {
-                            position++;
+                            index++;
+                        } else {
+                            return false;
                         }
                         break;
                     case GRAMMAR:
+                        std::cout << "Proccessing non-Terminal: " << LexicalAnalyzer::enumToString(ta.at(index))
+                                  << ", index: " << index << ", position: " << position << std::endl;
                         if (term.grammer->proccessList(ta, index)) {
-                            position++;
+                            //position++;
+                        } else {
+                            return false;
                         }
                         break;
                     case EPSOLON:
@@ -106,12 +118,9 @@ public:
                     default:
                         throw std::string("Error - not expecting");
                 }
-
-                if (position >= terms.size())
-                    return true;
             }
 
-            return false;
+            return passes;
         }
     };
 private:
@@ -136,19 +145,22 @@ public:
 
     bool proccessList(std::vector<T> &t, int &index) {
         int position = 0;
+        bool found = false;
 
-        for (; index < t.size();) {
+        for (; position < listOfTerms.size(); position++) {
             if (position > listOfTerms.size())
                 throw std::string("Error - out of bounds");
 
             if (listOfTerms.at(position)->isTermValid(t, index)) {
-                //index++;
-                if (position > listOfTerms.size())
-                    return true;
-
-                position++;
+                return true;
+            } else {
+                continue;
             }
         }
+
+        throw std::string("Doesnt work");
+
+        return false;
     }
 
 

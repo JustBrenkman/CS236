@@ -881,7 +881,7 @@ public:
     }
 
     // Converst the token to a string
-    std::string enumToString(int enumVal) {
+    static std::string enumToString(int enumVal) {
         // Cool way to do it
         const std::string enumStrings[] = { "COMMA", "PERIOD", "Q_MARK", "LEFT_PAREN", "RIGHT_PAREN",
                                             "COLON", "COLON_DASH", "MULTIPLY", "ADD", "SCHEMES", "FACTS",
