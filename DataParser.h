@@ -12,11 +12,13 @@ class DataParser {
 private:
     LexicalAnalyzer* lexicalAnalyzer;
     Grammar<LexicalAnalyzer::TOKEN>* datalogGrammar;
-    std::vector<Grammar<LexicalAnalyzer::TOKEN*>> listOfGrammars; // This will keep track of the grammars
+    std::vector<Grammar<LexicalAnalyzer::TOKEN> *> listOfGrammars; // This will keep track of the grammars
 public:
     explicit DataParser(LexicalAnalyzer* lexicalAnalyzer);
 
     void checkValidity();
+
+    void clean();
 
     ~DataParser();
 };

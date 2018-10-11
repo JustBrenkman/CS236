@@ -41,6 +41,7 @@ int main(int argc, char** argv) {
                 std::cout << "Invalid: " << e << std::endl;
             }
 
+            dataParser.clean();
             lex->clean();
             delete lex;
         } else {

@@ -80,10 +80,10 @@ public:
             int position = 0;
             bool passes = true;
 
-            std::cout << "Term definition: " << std::endl;
-
+//            std::cout << "Term definition: " << std::endl;
+//
 //            for (auto &te : terms) {
-//                std::cout << te.
+//                std::cout << (te.type == TERMINAL ? "\tTERMINAL" : "\tNON_TERMINAL") << std::endl;
 //            }
 
             for (; position < terms.size(); position++) {
@@ -92,8 +92,8 @@ public:
 
                 switch (term.type) {
                     case TERMINAL:
-                        std::cout << "Proccessing Terminal: " << LexicalAnalyzer::enumToString(ta.at(index))
-                                  << ", index: " << index << ", position: " << position << std::endl;
+//                        std::cout << "Proccessing Terminal: " << LexicalAnalyzer::enumToString(ta.at(index))
+//                                  << ", index: " << index << ", position: " << position << std::endl;
                         if (ta.at(index) == term.singularity) {
                             index++;
                         } else {
@@ -101,8 +101,8 @@ public:
                         }
                         break;
                     case GRAMMAR:
-                        std::cout << "Proccessing non-Terminal: " << LexicalAnalyzer::enumToString(ta.at(index))
-                                  << ", index: " << index << ", position: " << position << std::endl;
+//                        std::cout << "Proccessing non-Terminal: " << LexicalAnalyzer::enumToString(ta.at(index))
+//                                  << ", index: " << index << ", position: " << position << std::endl;
                         if (term.grammer->proccessList(ta, index)) {
                             //position++;
                         } else {
@@ -176,6 +176,12 @@ public:
     // Creates a new Term and returns the pointer
     static Term<T>* createTerm() {
         return new Term<T>();
+    }
+
+    void clean() {
+        for (auto &term : listOfTerms) {
+            delete term;
+        }
     }
 };
 

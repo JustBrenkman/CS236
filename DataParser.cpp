@@ -28,6 +28,9 @@ DataParser::DataParser(LexicalAnalyzer* lexicalAnalyzer) {
                     LexicalAnalyzer::SCHEMES, nullptr);
     term1->addEntry(Grammar<LexicalAnalyzer::TOKEN >::Term<LexicalAnalyzer::TOKEN >::GRAMMAR, LexicalAnalyzer::UNDEFINED, number);
     datalogGrammar->addTermToGrammar(term1);
+
+    listOfGrammars.push_back(datalogGrammar);
+    listOfGrammars.push_back(number);
 }
 
 DataParser::~DataParser() = default;
@@ -51,4 +54,11 @@ void DataParser::checkValidity() {
         std::cout << "Failed: " << e << std::endl;
     }
 
+}
+
+void DataParser::clean() {
+    for (auto &grammar : listOfGrammars) {
+        grammar->clean();
+        delete grammar;
+    }
 }
