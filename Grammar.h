@@ -41,6 +41,7 @@ public:
         std::vector<term_struct> terms;
         int pos = 0;
         std::string parentName;
+        bool isMainGrammar = false;
     public:
         void addEntry(TERM_TYPE type, Ta item, Grammar<Ta>* gram) {
             term_struct entry {type, item, gram};
@@ -124,6 +125,7 @@ private:
     int pos = 0;
     bool acceptsLambda = false;
     std::string name;
+    bool isMainGrammar = false;
 public:
     explicit Grammar(std::string name) {
         this->name = name;
@@ -164,6 +166,7 @@ public:
         if (!acceptsLambda)
             throw GrammarException(index, "Undefined", LexicalAnalyzer::enumToString(t.at(index)));
 
+
         return true;
     }
 
@@ -174,6 +177,10 @@ public:
     void addTermToGrammar(Term<T> *term) {
         term->setParetName(this->name);
         listOfTerms.push_back(term);
+    }
+
+    void setAsMain() {
+        isMainGrammar = true;
     }
 
     // Creates a new grammar and returns the pointer

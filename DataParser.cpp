@@ -313,6 +313,8 @@ void DataParser::checkValidity() {
     int index = 0;
     try {
         datalogGrammar->proccessList(tokens, index);
+        if (index < tokens.size() && tokens.at(index) != LexicalAnalyzer::EOF_TOKEN)
+            throw GrammarException(index, "", "");
         std::cout << "Successful!" << std::endl;
     } catch (std::string &e) {
         std::cout << "Failed: " << e << index << std::endl;
