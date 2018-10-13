@@ -5,6 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(SOURCE_FILES main.cpp
         FiniteStateMachine.h
-        LexicalAnalyzer.h LexicalAnalyzer.cpp DataParser.cpp DataParser.h Grammar.cpp Grammar.h)
+        LexicalAnalyzer.h LexicalAnalyzer.cpp DataParser.cpp DataParser.h Grammar.cpp Grammar.h GrammarException.cpp GrammarException.h)
 
 add_executable(lab2 ${SOURCE_FILES})

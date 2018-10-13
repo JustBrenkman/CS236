@@ -16,6 +16,7 @@
 #include <vector>
 #include "LexicalAnalyzer.h"
 #include <iostream>
+#include "GrammarException.h"
 
 template<typename T>
 class Grammar {
@@ -80,20 +81,12 @@ public:
             int position = 0;
             bool passes = true;
 
-//            std::cout << "Term definition: " << std::endl;
-//
-//            for (auto &te : terms) {
-//                std::cout << (te.type == TERMINAL ? "\tTERMINAL" : "\tNON_TERMINAL") << std::endl;
-//            }
-
             for (; position < terms.size(); position++) {
 
                 term_struct term = terms.at(position);
 
                 switch (term.type) {
                     case TERMINAL:
-//                        std::cout << "Proccessing Terminal: " << LexicalAnalyzer::enumToString(ta.at(index))
-//                                  << ", index: " << index << ", position: " << position << std::endl;
                         if (ta.at(index) == term.singularity) {
                             index++;
                         } else {
@@ -101,10 +94,8 @@ public:
                         }
                         break;
                     case GRAMMAR:
-//                        std::cout << "Proccessing non-Terminal: " << LexicalAnalyzer::enumToString(ta.at(index))
-//                                  << ", index: " << index << ", position: " << position << std::endl;
                         if (term.grammer->proccessList(ta, index)) {
-                            //position++;
+
                         } else {
                             return false;
                         }
@@ -116,7 +107,7 @@ public:
 
                         break;
                     default:
-                        throw std::string("Error - not expecting");
+                        throw GrammarException(index, "Undefined", LexicalAnalyzer::enumToString(ta.at(index)));
                 }
             }
 
@@ -126,8 +117,12 @@ public:
 private:
     std::vector<Term<T>*> listOfTerms;
     int pos = 0;
-
+    bool acceptsLambda = false;
+    std::string name;
 public:
+    explicit Grammar(std::string name) {
+        this->name = name;
+    }
     // Proocess an input, if there isn't a possible to add it will throw an error
     bool proccessTerm(T &t) {
 
@@ -158,19 +153,23 @@ public:
             }
         }
 
-        throw std::string("Doesnt work");
+        if (!acceptsLambda)
+            throw GrammarException(index, "Undefined", LexicalAnalyzer::enumToString(t.at(index)));
 
-        return false;
+        return true;
     }
 
+    void addLambdaTerm() {
+        acceptsLambda = true;
+    }
 
     void addTermToGrammar(Term<T> *term) {
         listOfTerms.push_back(term);
     }
 
     // Creates a new grammar and returns the pointer
-    static Grammar<T> *createGrammar() {
-        auto *gram = new Grammar<T>;
+    static Grammar<T> *createGrammar(std::string name) {
+        auto *gram = new Grammar<T>(name);
         return gram;
     }
     // Creates a new Term and returns the pointer

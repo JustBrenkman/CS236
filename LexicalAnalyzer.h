@@ -1031,7 +1031,14 @@ public:
 
 
     std::vector<token_struct> getTokenList() {
-        return listOfTokens;
+        std::vector<token_struct> list;
+
+        for (auto &i : listOfTokens) {
+            if (i.token != COMMENT)
+                list.push_back(i);
+        }
+
+        return list;
     }
 
     ~LexicalAnalyzer() = default;
