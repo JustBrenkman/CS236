@@ -40,11 +40,16 @@ public:
     private:
         std::vector<term_struct> terms;
         int pos = 0;
+        std::string parentName;
     public:
         void addEntry(TERM_TYPE type, Ta item, Grammar<Ta>* gram) {
             term_struct entry {type, item, gram};
             // Push the newly added entry to the list
             terms.push_back(entry);
+        }
+
+        void setParetName(std::string name) {
+            parentName = name;
         }
 
         bool isTermValid(Ta &ta) {
@@ -145,10 +150,13 @@ public:
         for (; position < listOfTerms.size(); position++) {
             if (position > listOfTerms.size())
                 throw std::string("Error - out of bounds");
-
-            if (listOfTerms.at(position)->isTermValid(t, index)) {
-                return true;
-            } else {
+            try {
+                if (listOfTerms.at(position)->isTermValid(t, index)) {
+                    return true;
+                } else {
+                    continue;
+                }
+            } catch (GrammarException &gra) {
                 continue;
             }
         }
@@ -164,6 +172,7 @@ public:
     }
 
     void addTermToGrammar(Term<T> *term) {
+        term->setParetName(this->name);
         listOfTerms.push_back(term);
     }
 

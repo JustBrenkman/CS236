@@ -105,13 +105,13 @@ DataParser::DataParser(LexicalAnalyzer* lexicalAnalyzer) {
     scheme->addTermToGrammar(term_scheme); // Add term to scheme grammar
 
     auto term_schemeList = Grammar<LexicalAnalyzer::TOKEN>::createTerm();
-    term_scheme->addEntry(Grammar<LexicalAnalyzer::TOKEN>::Term<LexicalAnalyzer::TOKEN>::GRAMMAR,
-                          LexicalAnalyzer::UNDEFINED, scheme);
-    term_scheme->addEntry(Grammar<LexicalAnalyzer::TOKEN>::Term<LexicalAnalyzer::TOKEN>::GRAMMAR,
-                          LexicalAnalyzer::UNDEFINED, schemeList);
+    term_schemeList->addEntry(Grammar<LexicalAnalyzer::TOKEN>::Term<LexicalAnalyzer::TOKEN>::GRAMMAR,
+                              LexicalAnalyzer::UNDEFINED, scheme);
+    term_schemeList->addEntry(Grammar<LexicalAnalyzer::TOKEN>::Term<LexicalAnalyzer::TOKEN>::GRAMMAR,
+                              LexicalAnalyzer::UNDEFINED, schemeList);
     schemeList->addTermToGrammar(term_schemeList);
     schemeList->addLambdaTerm();
-    schemeList->addTermToGrammar(term_Lambda);
+//    schemeList->addTermToGrammar(term_Lambda);
 
 
     //define terms of idList
@@ -124,7 +124,7 @@ DataParser::DataParser(LexicalAnalyzer* lexicalAnalyzer) {
                           LexicalAnalyzer::UNDEFINED, idList);
     idList->addTermToGrammar(term_idList);
     idList->addLambdaTerm();
-    idList->addTermToGrammar(term_Lambda);
+//    idList->addTermToGrammar(term_Lambda);
 
     // define terms of facts
     auto term_fact = Grammar<LexicalAnalyzer::TOKEN>::createTerm();
@@ -150,7 +150,7 @@ DataParser::DataParser(LexicalAnalyzer* lexicalAnalyzer) {
                             LexicalAnalyzer::UNDEFINED, factList);
     factList->addTermToGrammar(term_factList);
     factList->addLambdaTerm();
-    factList->addTermToGrammar(term_Lambda);
+//    factList->addTermToGrammar(term_Lambda);
 
     // define terms of rule
     auto term_rule = Grammar<LexicalAnalyzer::TOKEN>::createTerm();
@@ -174,7 +174,7 @@ DataParser::DataParser(LexicalAnalyzer* lexicalAnalyzer) {
                             LexicalAnalyzer::UNDEFINED, ruleList);
     ruleList->addTermToGrammar(term_ruleList);
     ruleList->addLambdaTerm();
-    ruleList->addTermToGrammar(term_Lambda);
+//    ruleList->addTermToGrammar(term_Lambda);
 
     // define terms for head predicate
     auto term_headPredicate = Grammar<LexicalAnalyzer::TOKEN>::createTerm();
@@ -214,7 +214,7 @@ DataParser::DataParser(LexicalAnalyzer* lexicalAnalyzer) {
                                  LexicalAnalyzer::UNDEFINED, predicateList);
     predicateList->addTermToGrammar(term_predicateList);
     predicateList->addLambdaTerm();
-    predicateList->addTermToGrammar(term_Lambda);
+//    predicateList->addTermToGrammar(term_Lambda);
 
     // define terms for parameter
     auto term_parameter_string = Grammar<LexicalAnalyzer::TOKEN>::createTerm();
@@ -240,7 +240,7 @@ DataParser::DataParser(LexicalAnalyzer* lexicalAnalyzer) {
                                  LexicalAnalyzer::UNDEFINED, parameterList);
     parameterList->addTermToGrammar(term_parameterList);
     parameterList->addLambdaTerm();
-    parameterList->addTermToGrammar(term_Lambda);
+//    parameterList->addTermToGrammar(term_Lambda);
 
     // define terms of expression
     auto term_expression = Grammar<LexicalAnalyzer::TOKEN>::createTerm();
@@ -282,7 +282,7 @@ DataParser::DataParser(LexicalAnalyzer* lexicalAnalyzer) {
                              LexicalAnalyzer::UNDEFINED, queryList);
     queryList->addTermToGrammar(term_queryList);
     queryList->addLambdaTerm();
-    queryList->addTermToGrammar(term_Lambda);
+//    queryList->addTermToGrammar(term_Lambda);
 
     //define terms of stringlist
     auto term_stringList = Grammar<LexicalAnalyzer::TOKEN>::createTerm();
@@ -292,7 +292,8 @@ DataParser::DataParser(LexicalAnalyzer* lexicalAnalyzer) {
                               LexicalAnalyzer::STRING, nullptr);
     term_stringList->addEntry(Grammar<LexicalAnalyzer::TOKEN>::Term<LexicalAnalyzer::TOKEN>::GRAMMAR,
                               LexicalAnalyzer::UNDEFINED, stringList);
-
+    stringList->addTermToGrammar(term_stringList);
+    stringList->addLambdaTerm();
 }
 
 DataParser::~DataParser() = default;
