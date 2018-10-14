@@ -32,10 +32,6 @@ DataParser::DataParser(LexicalAnalyzer *lexicalAnalyzer) {
     auto queryList = CREATE_GRAMMAR("queryList");
     auto stringList = CREATE_GRAMMAR("stringList");
 
-    // Define the lambda terminal
-    auto term_Lambda = CREATE_TERM;
-    term_Lambda->addEntry(TERMINAL_, LexicalAnalyzer::EOF_TOKEN, nullptr);
-
     //define the terms of the datalog grammar
     auto term_datalog = CREATE_TERM;
     term_datalog->addEntry(TERMINAL_, LexicalAnalyzer::SCHEMES, nullptr);
@@ -68,7 +64,6 @@ DataParser::DataParser(LexicalAnalyzer *lexicalAnalyzer) {
     term_schemeList->addEntry(NON_TERMINAL, LexicalAnalyzer::UNDEFINED, schemeList);
     schemeList->addTermToGrammar(term_schemeList);
     schemeList->addLambdaTerm();
-//    schemeList->addTermToGrammar(term_Lambda);
 
 
     //define terms of idList
@@ -78,7 +73,6 @@ DataParser::DataParser(LexicalAnalyzer *lexicalAnalyzer) {
     term_idList->addEntry(NON_TERMINAL, LexicalAnalyzer::UNDEFINED, idList);
     idList->addTermToGrammar(term_idList);
     idList->addLambdaTerm();
-//    idList->addTermToGrammar(term_Lambda);
 
     // define terms of facts
     auto term_fact = CREATE_TERM;
@@ -96,7 +90,6 @@ DataParser::DataParser(LexicalAnalyzer *lexicalAnalyzer) {
     term_factList->addEntry(NON_TERMINAL, LexicalAnalyzer::UNDEFINED, factList);
     factList->addTermToGrammar(term_factList);
     factList->addLambdaTerm();
-//    factList->addTermToGrammar(term_Lambda);
 
     // define terms of rule
     auto term_rule = CREATE_TERM;
@@ -113,7 +106,6 @@ DataParser::DataParser(LexicalAnalyzer *lexicalAnalyzer) {
     term_ruleList->addEntry(NON_TERMINAL, LexicalAnalyzer::UNDEFINED, ruleList);
     ruleList->addTermToGrammar(term_ruleList);
     ruleList->addLambdaTerm();
-//    ruleList->addTermToGrammar(term_Lambda);
 
     // define terms for head predicate
     auto term_headPredicate = CREATE_TERM;
@@ -140,7 +132,6 @@ DataParser::DataParser(LexicalAnalyzer *lexicalAnalyzer) {
     term_predicateList->addEntry(NON_TERMINAL, LexicalAnalyzer::UNDEFINED, predicateList);
     predicateList->addTermToGrammar(term_predicateList);
     predicateList->addLambdaTerm();
-//    predicateList->addTermToGrammar(term_Lambda);
 
     // define terms for parameter
     auto term_parameter_string = CREATE_TERM;
@@ -160,7 +151,6 @@ DataParser::DataParser(LexicalAnalyzer *lexicalAnalyzer) {
     term_parameterList->addEntry(NON_TERMINAL, LexicalAnalyzer::UNDEFINED, parameterList);
     parameterList->addTermToGrammar(term_parameterList);
     parameterList->addLambdaTerm();
-//    parameterList->addTermToGrammar(term_Lambda);
 
     // define terms of expression
     auto term_expression = CREATE_TERM;
@@ -191,7 +181,6 @@ DataParser::DataParser(LexicalAnalyzer *lexicalAnalyzer) {
     term_queryList->addEntry(NON_TERMINAL, LexicalAnalyzer::UNDEFINED, queryList);
     queryList->addTermToGrammar(term_queryList);
     queryList->addLambdaTerm();
-//    queryList->addTermToGrammar(term_Lambda);
 
     //define terms of stringlist
     auto term_stringList = CREATE_TERM;
