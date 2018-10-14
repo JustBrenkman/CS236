@@ -53,40 +53,8 @@ public:
             parentName = name;
         }
 
-        bool isTermValid(Ta &ta) {
-            if (pos >= terms.size())
-                return true;
-
-            term_struct term = terms.at(pos);
-
-            switch (term.type) {
-                case TERMINAL:
-                    if (ta == term.singularity) {
-                        pos++;
-                    }
-                    break;
-                case GRAMMAR:
-                    if (term.grammer->proccessTerm(ta)) {
-                        pos++;
-                    }
-                    break;
-                case EPSOLON:
-
-                    break;
-                case LAMBDA:
-
-                    break;
-                default:
-                    throw std::string("Error");
-            }
-
-            return pos >= terms.size();
-        }
-
         bool isTermValid(std::vector<Ta> &ta, int &index) {
             int position = 0;
-            bool passes = true;
-
             for (; position < terms.size(); position++) {
 
                 term_struct term = terms.at(position);
@@ -96,78 +64,54 @@ public:
                         if (ta.at(index) == term.singularity) {
                             index++;
                         } else {
+                            if (position > 0)
+                                throw GrammarException(index, "Undefined", LexicalAnalyzer::enumToString(ta.at(index)));
                             return false;
                         }
                         break;
                     case GRAMMAR:
                         if (term.grammer->proccessList(ta, index)) {
-
                         } else {
+                            if (position > 0)
+                                throw GrammarException(index, "Undefined", LexicalAnalyzer::enumToString(ta.at(index)));
                             return false;
                         }
                         break;
-                    case EPSOLON:
-
-                        break;
-                    case LAMBDA:
-
-                        break;
                     default:
-                        throw GrammarException(index, "Undefined", LexicalAnalyzer::enumToString(ta.at(index)));
+                        break;
                 }
             }
 
-            return passes;
+            return true;
         }
     };
 private:
     std::vector<Term<T>*> listOfTerms;
-    int pos = 0;
     bool acceptsLambda = false;
     std::string name;
-    bool isMainGrammar = false;
 public:
+
     explicit Grammar(std::string name) {
         this->name = name;
-    }
-    // Proocess an input, if there isn't a possible to add it will throw an error
-    bool proccessTerm(T &t) {
-
-        if (pos >= listOfTerms.size())
-            throw std::string("Error - out of bounds");
-
-        if (listOfTerms.at(pos)->isTermValid(t)) {
-            pos++;
-            if (pos > listOfTerms.size())
-                return true;
-        }
-
-        return false;
     }
 
     bool proccessList(std::vector<T> &t, int &index) {
         int position = 0;
-        bool found = false;
+        bool flag = false;
 
         for (; position < listOfTerms.size(); position++) {
             if (position > listOfTerms.size())
                 throw std::string("Error - out of bounds");
-            try {
-                if (listOfTerms.at(position)->isTermValid(t, index)) {
+
+            if (listOfTerms.at(position)->isTermValid(t, index)) {
                     return true;
                 } else {
                     continue;
                 }
-            } catch (GrammarException &gra) {
-                continue;
-            }
         }
 
-        if (!acceptsLambda)
-            throw GrammarException(index, "Undefined", LexicalAnalyzer::enumToString(t.at(index)));
+        return acceptsLambda;
 
-
-        return true;
     }
 
     void addLambdaTerm() {
@@ -177,10 +121,6 @@ public:
     void addTermToGrammar(Term<T> *term) {
         term->setParetName(this->name);
         listOfTerms.push_back(term);
-    }
-
-    void setAsMain() {
-        isMainGrammar = true;
     }
 
     // Creates a new grammar and returns the pointer

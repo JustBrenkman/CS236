@@ -4,6 +4,11 @@
 
 #include "DataParser.h"
 
+#define CREATE_GRAMMAR Grammar<LexicalAnalyzer::TOKEN>::createGrammar
+#define CREATE_TERM Grammar<LexicalAnalyzer::TOKEN>::createTerm()
+#define TERMINAL_ Grammar<LexicalAnalyzer::TOKEN>::Term<LexicalAnalyzer::TOKEN>::TERMINAL
+#define NON_TERMINAL Grammar<LexicalAnalyzer::TOKEN>::Term<LexicalAnalyzer::TOKEN>::GRAMMAR
+
 DataParser::DataParser(LexicalAnalyzer* lexicalAnalyzer) {
     this->lexicalAnalyzer = lexicalAnalyzer;
 
@@ -34,7 +39,7 @@ DataParser::DataParser(LexicalAnalyzer* lexicalAnalyzer) {
 
 
     // Define the grammars
-    datalogGrammar = Grammar<LexicalAnalyzer::TOKEN>::createGrammar("datalog");
+    datalogGrammar = CREATE_GRAMMAR("datalog");
     auto scheme = Grammar<LexicalAnalyzer::TOKEN>::createGrammar("scheme");
     auto schemeList = Grammar<LexicalAnalyzer::TOKEN>::createGrammar("schemeList");
     auto idList = Grammar<LexicalAnalyzer::TOKEN>::createGrammar("idList");
@@ -59,12 +64,12 @@ DataParser::DataParser(LexicalAnalyzer* lexicalAnalyzer) {
                           LexicalAnalyzer::EOF_TOKEN, nullptr);
 
     //define the terms of the datalog grammar
-    auto term_datalog = Grammar<LexicalAnalyzer::TOKEN>::createTerm();
-    term_datalog->addEntry(Grammar<LexicalAnalyzer::TOKEN>::Term<LexicalAnalyzer::TOKEN>::TERMINAL,
+    auto term_datalog = CREATE_TERM;
+    term_datalog->addEntry(TERMINAL_,
                            LexicalAnalyzer::SCHEMES, nullptr);
     term_datalog->addEntry(Grammar<LexicalAnalyzer::TOKEN>::Term<LexicalAnalyzer::TOKEN>::TERMINAL,
                            LexicalAnalyzer::COLON, nullptr);
-    term_datalog->addEntry(Grammar<LexicalAnalyzer::TOKEN>::Term<LexicalAnalyzer::TOKEN>::GRAMMAR,
+    term_datalog->addEntry(NON_TERMINAL,
                            LexicalAnalyzer::UNDEFINED, scheme);
     term_datalog->addEntry(Grammar<LexicalAnalyzer::TOKEN>::Term<LexicalAnalyzer::TOKEN>::GRAMMAR,
                            LexicalAnalyzer::UNDEFINED, schemeList);
@@ -324,7 +329,7 @@ void DataParser::checkValidity() {
                 listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).token);
         int lineNumber = listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).lineNumber;
         std::string tokenStr = listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).tokenStr;
-        std::cout << "(" << token << ", " << lineNumber << ", \"" << tokenStr << "\")" << std::endl;
+        std::cout << "(" << token << ", \"" << tokenStr << "\", " << lineNumber << ")" << std::endl;
     }
 
 }

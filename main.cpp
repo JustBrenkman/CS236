@@ -10,11 +10,11 @@ const int FILE_INPUT = 1;
 int main(int argc, char** argv) {
 
     try {
-        if (argc > 0) {
+        if (argc > 1) {
             // Create a file stream to pull in the file data
             std::ifstream file(argv[FILE_INPUT]);
 
-            std::cout << "Opening File: " << argv[FILE_INPUT] << std::endl;
+            //std::cout << "Opening File: " << argv[FILE_INPUT] << std::endl;
 
             std::string str;
             // Copy over the whole file into the string we just created
@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
             str.reserve(static_cast<unsigned long>((int)file.tellg()));
             file.seekg(0, std::ios::beg);
 
-            std::cout << "Copying file over..." << std::endl;
+            //std::cout << "Copying file over..." << std::endl;
             str.assign((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 
             // Create our Lexical Analyzer and proccess the string
