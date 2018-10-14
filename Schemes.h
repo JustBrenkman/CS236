@@ -7,6 +7,14 @@
 
 
 class Schemes {
+private:
+    class Scheme {
+    private:
+    public:
+        Scheme();
+    };
+
+public:
 
 };
 

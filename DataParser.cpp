@@ -12,32 +12,6 @@
 DataParser::DataParser(LexicalAnalyzer *lexicalAnalyzer) {
     this->lexicalAnalyzer = lexicalAnalyzer;
 
-//    // Create the tokens
-//    auto term = Grammar<LexicalAnalyzer::TOKEN >::createTerm();
-//    auto term1 = Grammar<LexicalAnalyzer::TOKEN >::createTerm();
-//    auto term2 = Grammar<LexicalAnalyzer::TOKEN>::createTerm();
-//
-//    // Create grammar and define it with the terms created above
-//    Grammar<LexicalAnalyzer::TOKEN> *number = Grammar<LexicalAnalyzer::TOKEN>::createGrammar();
-//    term->addEntry(Grammar<LexicalAnalyzer::TOKEN>::Term<LexicalAnalyzer::TOKEN>::TERMINAL, LexicalAnalyzer::ID,
-//                   nullptr);
-//    term2->addEntry(Grammar<LexicalAnalyzer::TOKEN>::Term<LexicalAnalyzer::TOKEN>::TERMINAL, LexicalAnalyzer::EOF_TOKEN,
-//                    nullptr);
-//    term->addEntry(Grammar<LexicalAnalyzer::TOKEN>::Term<LexicalAnalyzer::TOKEN>::GRAMMAR, LexicalAnalyzer::UNDEFINED,
-//                   number);
-//    number->addTermToGrammar(term);
-//    number->addTermToGrammar(term2);
-//
-//    datalogGrammar = Grammar<LexicalAnalyzer::TOKEN>::createGrammar();
-//    term1->addEntry(Grammar<LexicalAnalyzer::TOKEN>::Term<LexicalAnalyzer::TOKEN>::TERMINAL,
-//                    LexicalAnalyzer::SCHEMES, nullptr);
-//    term1->addEntry(Grammar<LexicalAnalyzer::TOKEN >::Term<LexicalAnalyzer::TOKEN >::GRAMMAR, LexicalAnalyzer::UNDEFINED, number);
-//    datalogGrammar->addTermToGrammar(term1);
-//
-//    listOfGrammars.push_back(datalogGrammar);
-//    listOfGrammars.push_back(number);
-
-
     // Define the grammars
     datalogGrammar = CREATE_GRAMMAR("datalog");
     auto scheme = CREATE_GRAMMAR("scheme");
@@ -60,8 +34,7 @@ DataParser::DataParser(LexicalAnalyzer *lexicalAnalyzer) {
 
     // Define the lambda terminal
     auto term_Lambda = CREATE_TERM;
-    term_Lambda->addEntry(TERMINAL_,
-                          LexicalAnalyzer::EOF_TOKEN, nullptr);
+    term_Lambda->addEntry(TERMINAL_, LexicalAnalyzer::EOF_TOKEN, nullptr);
 
     //define the terms of the datalog grammar
     auto term_datalog = CREATE_TERM;
@@ -231,6 +204,7 @@ DataParser::DataParser(LexicalAnalyzer *lexicalAnalyzer) {
 
 DataParser::~DataParser() = default;
 
+// Checks everything and see it it all works out.
 void DataParser::checkValidity() {
 
     // Gets a list of tokens from sexy lexy
