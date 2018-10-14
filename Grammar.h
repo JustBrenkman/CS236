@@ -39,20 +39,23 @@ public:
         };
     private:
         std::vector<term_struct> terms;
-        int pos = 0;
         std::string parentName;
-        bool isMainGrammar = false;
     public:
+        // adds another entry into the terms list
         void addEntry(TERM_TYPE type, Ta item, Grammar<Ta>* gram) {
             term_struct entry {type, item, gram};
             // Push the newly added entry to the list
             terms.push_back(entry);
         }
 
+        // Sets the name of the grammar it is in
         void setParetName(std::string name) {
             parentName = name;
         }
 
+        // Super duper complex function!
+        // Jk it just checks to see all the terms in the list of terms are satisfied by the input
+        // WARNING RECURSIVE
         bool isTermValid(std::vector<Ta> &ta, int &index) {
             int position = 0;
             for (; position < terms.size(); position++) {
@@ -86,38 +89,47 @@ public:
         }
     };
 private:
+    // List of terms in the grammar
     std::vector<Term<T>*> listOfTerms;
+    // This will dtermine if the grammar accepts lambda or not
     bool acceptsLambda = false;
+    // Name of the grammar usefule for debugging
     std::string name;
 public:
 
+    // Name assignment is given in the constructor, mainly for debugging
     explicit Grammar(std::string name) {
         this->name = name;
     }
 
+    // Super duper complex function!
+    // Jk it just checks to see there is a term in the list of terms that is satisfied by the input
     bool proccessList(std::vector<T> &t, int &index) {
         int position = 0;
         bool flag = false;
-
+        // checks every term in list of terms
         for (; position < listOfTerms.size(); position++) {
+
             if (position > listOfTerms.size())
-                throw std::string("Error - out of bounds");
+                throw std::string("Error - out of bounds"); // Just in case ;)
 
             if (listOfTerms.at(position)->isTermValid(t, index)) {
-                    return true;
-                } else {
-                    continue;
-                }
+                return true; // Only needs to find one term that it satisfied
+            } else {
+                continue;
+            }
         }
 
         return acceptsLambda;
 
     }
 
+    // Adds a lambda term to the list of terms
     void addLambdaTerm() {
         acceptsLambda = true;
     }
 
+    // Adds term to grammar and sets the terms parent to the grammars name
     void addTermToGrammar(Term<T> *term) {
         term->setParetName(this->name);
         listOfTerms.push_back(term);
@@ -133,12 +145,12 @@ public:
         return new Term<T>();
     }
 
+    // Memory management :)
     void clean() {
         for (auto &term : listOfTerms) {
             delete term;
         }
     }
 };
-
 
 #endif //LAB2_GRAMMAR_H
