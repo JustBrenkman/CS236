@@ -14,4 +14,6 @@ void LexicalAnalyzer::advanceToken() {
 
 bool LexicalAnalyzer::isAtEnd() {
     if (curretntItr != listOfTokens.end());
+
+    return true;
 }

@@ -44,6 +44,7 @@ int main(int argc, char** argv) {
             dataParser.clean();
             lex->clean();
             delete lex;
+
         } else {
             std::cout << "No input file specified" << std::endl;
         }

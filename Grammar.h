@@ -56,8 +56,8 @@ public:
         // Super duper complex function!
         // Jk it just checks to see all the terms in the list of terms are satisfied by the input
         // WARNING RECURSIVE
-        bool isTermValid(std::vector<Ta> &ta, int &index) {
-            int position = 0;
+        bool isTermValid(std::vector<Ta> &ta, unsigned int &index) {
+            unsigned int position = 0;
             for (; position < terms.size(); position++) {
 
                 term_struct term = terms.at(position);
@@ -104,9 +104,8 @@ public:
 
     // Super duper complex function!
     // Jk it just checks to see there is a term in the list of terms that is satisfied by the input
-    bool proccessList(std::vector<T> &t, int &index) {
-        int position = 0;
-        bool flag = false;
+    bool proccessList(std::vector<T> &t, unsigned int &index) {
+        unsigned int position = 0;
         // checks every term in list of terms
         for (; position < listOfTerms.size(); position++) {
 

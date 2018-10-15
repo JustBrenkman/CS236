@@ -32,6 +32,26 @@ DataParser::DataParser(LexicalAnalyzer *lexicalAnalyzer) {
     auto queryList = CREATE_GRAMMAR("queryList");
     auto stringList = CREATE_GRAMMAR("stringList");
 
+    // Memory management
+//    listOfGrammars.push_back(datalogGrammar);
+//    listOfGrammars.push_back(scheme);
+//    listOfGrammars.push_back(schemeList);
+//    listOfGrammars.push_back(idList);
+//    listOfGrammars.push_back(fact);
+//    listOfGrammars.push_back(factList);
+//    listOfGrammars.push_back(rule);
+//    listOfGrammars.push_back(ruleList);
+//    listOfGrammars.push_back(headPredicate);
+//    listOfGrammars.push_back(predicate);
+//    listOfGrammars.push_back(predicateList);
+//    listOfGrammars.push_back(parameter);
+//    listOfGrammars.push_back(parameterList);
+//    listOfGrammars.push_back(expression);
+//    listOfGrammars.push_back(operatorG);
+//    listOfGrammars.push_back(query);
+//    listOfGrammars.push_back(queryList);
+//    listOfGrammars.push_back(stringList);
+
     //define the terms of the datalog grammar
     auto term_datalog = CREATE_TERM;
     term_datalog->addEntry(TERMINAL_, LexicalAnalyzer::SCHEMES, nullptr);
@@ -209,7 +229,7 @@ void DataParser::checkValidity() {
     // Add that eof token, lol we don't actually need it
     tokens.push_back(LexicalAnalyzer::EOF_TOKEN);
 
-    int index = 0;
+    unsigned int index = 0;
     try {
 
         // Give the grammar our list, see if it works. Fingers crossed
@@ -218,6 +238,7 @@ void DataParser::checkValidity() {
         // Double check to make sure nothing was left out, dem tokens have some serious FOMO
         if (index < tokens.size() && tokens.at(static_cast<unsigned long>(index)) != LexicalAnalyzer::EOF_TOKEN)
             throw GrammarException(index, "", "");
+
         std::cout << "Successful!" << std::endl; // If it finishes with no problem it was successful
 
         // Create our list of schemes and such
