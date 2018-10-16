@@ -14,7 +14,14 @@ void Domain::addStringToDomain(std::string string) {
     domain.push_back(string);
 }
 
+bool compare(std::string a, std::string b) {
+    return a > b;
+}
+
 std::string Domain::toString() {
+
+    std::sort(domain.begin(), domain.end(), compare);
+
     std::string domainS;
 
     domainS.append("Domain(");
