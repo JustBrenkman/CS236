@@ -15,7 +15,7 @@ public:
     Schemes(std::vector<LexicalAnalyzer::token_struct> &list, unsigned int &index);
 
     friend std::ostream &operator<<(std::ostream &os, const Schemes &scheme) {
-        os << "Schemes(" << scheme.schemes.size() << ")" << std::endl;
+        os << "Schemes(" << scheme.schemes.size() << "):" << std::endl;
         for (auto &a: scheme.schemes) {
             os << "  " << *a << std::endl;
         }

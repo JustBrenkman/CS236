@@ -16,7 +16,7 @@ public:
     Rules(std::vector<LexicalAnalyzer::token_struct> &list, unsigned int &index);
 
     friend std::ostream &operator<<(std::ostream &os, const Rules &facts1) {
-        os << "Rules(" << facts1.rules.size() << ")" << std::endl;
+        os << "Rules(" << facts1.rules.size() << "):" << std::endl;
         for (auto &a: facts1.rules) {
             os << "  " << *a << std::endl;
         }

@@ -11,7 +11,8 @@ Queries::Queries(std::vector<LexicalAnalyzer::token_struct> &list, unsigned int 
     do {
         queries.push_back(new Query(list, index));
         if (index >= list.size()) break;
-    } while (list.at(index).token != LexicalAnalyzer::ID);
+
+    } while (list.at(index).token == LexicalAnalyzer::ID);
 }
 
 void Queries::clean() {

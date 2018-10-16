@@ -17,7 +17,7 @@ public:
     HeadPredicate(std::vector<LexicalAnalyzer::token_struct> &list, unsigned int &index);
 
     friend std::ostream &operator<<(std::ostream &os, const HeadPredicate &rule) {
-        os << *rule.id << "";
+        os << *rule.id << "(";
 
         if (!rule.ids.empty()) {
             for (unsigned int i = 0; i < rule.ids.size() - 1; i++) {

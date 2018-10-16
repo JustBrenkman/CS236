@@ -23,7 +23,7 @@ public:
                 os << *rule.predicate.at(i) << ",";
             }
 
-            os << *rule.predicate.at(rule.predicate.size() - 1) << ").";
+            os << *rule.predicate.at(rule.predicate.size() - 1) << ".";
         }
 
         return os;
