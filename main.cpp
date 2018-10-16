@@ -1,3 +1,8 @@
+/*
+Ben Brenkman, Section 3, JustBrenkman@gmail.com
+Purpose: Creates a list of inputs based on the input file
+*/
+
 #include <string>
 #include <iostream>
 #include <fstream>

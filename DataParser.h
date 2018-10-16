@@ -1,6 +1,7 @@
-//
-// Created by bbrenk on 10/5/18.
-//
+/*
+Ben Brenkman, Section 3, JustBrenkman@gmail.com
+Purpose: Creates a list of inputs based on the input file
+*/
 
 #ifndef LAB2_DATAPARSER_H
 #define LAB2_DATAPARSER_H
