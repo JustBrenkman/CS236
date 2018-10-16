@@ -18,9 +18,11 @@ Expression::Expression(std::vector<LexicalAnalyzer::token_struct> &list, unsigne
 
 std::string Expression::toString() const {
     std::string str;
+    str.append("(");
     str.append(left->toString());
     str.append(operatorg->toString());
     str.append(right->toString());
+    str.append(")");
     return str;
 }
 

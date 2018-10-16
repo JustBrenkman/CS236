@@ -269,7 +269,7 @@ void DataParser::checkValidity() {
                 listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).token);
         int lineNumber = listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).lineNumber;
         std::string tokenStr = listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).tokenStr;
-        std::cout << "(" << token << ", \"" << tokenStr << "\", " << lineNumber << ")" << std::endl;
+        std::cout << "  (" << token << ",\"" << tokenStr << "\"," << lineNumber << ")" << std::endl;
     }
 }
 
