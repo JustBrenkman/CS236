@@ -7,6 +7,7 @@
 
 #include "LexicalAnalyzer.h"
 #include "Grammar.h"
+#include "GrammarException.h"
 
 class DataParser {
 private:
