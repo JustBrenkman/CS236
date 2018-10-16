@@ -14,7 +14,7 @@ public:
     DLString(std::vector<LexicalAnalyzer::token_struct> &list, unsigned int &index);
 
     friend std::ostream &operator<<(std::ostream &os, const DLString &string) {
-        os << "\'" << string.constant << "\'";
+        os << string.constanti;
         return os;
     }
 

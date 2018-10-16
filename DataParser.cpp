@@ -246,6 +246,19 @@ void DataParser::checkValidity() {
         std::cout << "Success!" << std::endl; // If it finishes with no problem it was successful
 
         // Create our list of schemes and such
+        unsigned int next = 0;
+
+        Schemes schemes(listOfTokens, next);
+        Facts facts(listOfTokens, next);
+        Rules rules(listOfTokens, next);
+        Queries queries(listOfTokens, next);
+
+        std::cout << schemes << facts << rules << queries << facts.toDomain() << std::endl;
+
+        schemes.clean();
+        facts.clean();
+        rules.clean();
+        queries.clean();
 
     } catch (std::string &e) {
         std::cout << "Failed: " << e << index << std::endl;
@@ -258,20 +271,6 @@ void DataParser::checkValidity() {
         std::string tokenStr = listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).tokenStr;
         std::cout << "(" << token << ", \"" << tokenStr << "\", " << lineNumber << ")" << std::endl;
     }
-
-    unsigned int next = 0;
-
-    Schemes schemes(listOfTokens, next);
-    Facts facts(listOfTokens, next);
-    Rules rules(listOfTokens, next);
-    Queries queries(listOfTokens, next);
-
-    std::cout << schemes << facts << rules << queries << facts.toDomain() << std::endl;
-
-    schemes.clean();
-    facts.clean();
-    rules.clean();
-    queries.clean();
 }
 
 // calls the grammars clean function before deleting the pointers

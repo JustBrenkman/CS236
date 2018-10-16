@@ -18,7 +18,7 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Facts &facts1) {
         os << "Facts(" << facts1.facts.size() << ")" << std::endl;
         for (auto &a: facts1.facts) {
-            os << "\t" << *a << std::endl;
+            os << "  " << *a << std::endl;
         }
         return os;
     }

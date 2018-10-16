@@ -17,7 +17,7 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Schemes &scheme) {
         os << "Schemes(" << scheme.schemes.size() << ")" << std::endl;
         for (auto &a: scheme.schemes) {
-            os << "\t" << *a << std::endl;
+            os << "  " << *a << std::endl;
         }
         return os;
     }

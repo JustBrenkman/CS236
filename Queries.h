@@ -18,7 +18,7 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Queries &queries1) {
         os << "Queries(" << queries1.queries.size() << ")" << std::endl;
         for (auto &a: queries1.queries) {
-            os << "\t" << *a << "?" << std::endl;
+            os << "  " << *a << "?" << std::endl;
         }
         return os;
     }

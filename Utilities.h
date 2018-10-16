@@ -6,6 +6,7 @@
 #define LAB2_UTILITIES_H
 
 #include "LexicalAnalyzer.h"
+#include "GrammarException.h"
 
 class Utilities {
 public:
