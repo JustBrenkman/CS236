@@ -7,6 +7,7 @@
 
 
 #include "LexicalAnalyzer.h"
+#include "GrammarException.h"
 
 class Operator {
 private:

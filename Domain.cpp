@@ -15,7 +15,7 @@ void Domain::addStringToDomain(std::string string) {
 }
 
 bool compare(std::string a, std::string b) {
-    return a > b;
+    return a < b;
 }
 
 std::string Domain::toString() {
@@ -26,7 +26,7 @@ std::string Domain::toString() {
 
     domainS.append("Domain(");
     domainS.append(std::to_string(domain.size()));
-    domainS.append(")\n");
+    domainS.append("):\n");
 
     for (auto &d : domain) {
         domainS.append("  ");
