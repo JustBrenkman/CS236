@@ -6,8 +6,24 @@
 #define LAB2_RULES_H
 
 
-class Rules {
+#include "Rule.h"
 
+class Rules {
+private:
+    std::vector<Rule *> rules;
+
+public:
+    Rules(std::vector<LexicalAnalyzer::token_struct> &list, unsigned int &index);
+
+    friend std::ostream &operator<<(std::ostream &os, const Rules &facts1) {
+        os << "Rules(" << facts1.rules.size() << ")" << std::endl;
+        for (auto &a: facts1.rules) {
+            os << "\t" << *a << std::endl;
+        }
+        return os;
+    }
+
+    void clean();
 };
 
 

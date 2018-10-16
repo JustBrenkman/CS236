@@ -3,6 +3,10 @@
 //
 
 #include "DataParser.h"
+#include "Schemes.h"
+#include "Facts.h"
+#include "Rules.h"
+#include "Queries.h"
 
 #define CREATE_GRAMMAR Grammar<LexicalAnalyzer::TOKEN>::createGrammar
 #define CREATE_TERM Grammar<LexicalAnalyzer::TOKEN>::createTerm()
@@ -33,24 +37,24 @@ DataParser::DataParser(LexicalAnalyzer *lexicalAnalyzer) {
     auto stringList = CREATE_GRAMMAR("stringList");
 
     // Memory management
-//    listOfGrammars.push_back(datalogGrammar);
-//    listOfGrammars.push_back(scheme);
-//    listOfGrammars.push_back(schemeList);
-//    listOfGrammars.push_back(idList);
-//    listOfGrammars.push_back(fact);
-//    listOfGrammars.push_back(factList);
-//    listOfGrammars.push_back(rule);
-//    listOfGrammars.push_back(ruleList);
-//    listOfGrammars.push_back(headPredicate);
-//    listOfGrammars.push_back(predicate);
-//    listOfGrammars.push_back(predicateList);
-//    listOfGrammars.push_back(parameter);
-//    listOfGrammars.push_back(parameterList);
-//    listOfGrammars.push_back(expression);
-//    listOfGrammars.push_back(operatorG);
-//    listOfGrammars.push_back(query);
-//    listOfGrammars.push_back(queryList);
-//    listOfGrammars.push_back(stringList);
+    listOfGrammars.push_back(datalogGrammar);
+    listOfGrammars.push_back(scheme);
+    listOfGrammars.push_back(schemeList);
+    listOfGrammars.push_back(idList);
+    listOfGrammars.push_back(fact);
+    listOfGrammars.push_back(factList);
+    listOfGrammars.push_back(rule);
+    listOfGrammars.push_back(ruleList);
+    listOfGrammars.push_back(headPredicate);
+    listOfGrammars.push_back(predicate);
+    listOfGrammars.push_back(predicateList);
+    listOfGrammars.push_back(parameter);
+    listOfGrammars.push_back(parameterList);
+    listOfGrammars.push_back(expression);
+    listOfGrammars.push_back(operatorG);
+    listOfGrammars.push_back(query);
+    listOfGrammars.push_back(queryList);
+    listOfGrammars.push_back(stringList);
 
     //define the terms of the datalog grammar
     auto term_datalog = CREATE_TERM;
@@ -239,7 +243,7 @@ void DataParser::checkValidity() {
         if (index < tokens.size() && tokens.at(static_cast<unsigned long>(index)) != LexicalAnalyzer::EOF_TOKEN)
             throw GrammarException(index, "", "");
 
-        std::cout << "Successful!" << std::endl; // If it finishes with no problem it was successful
+        std::cout << "Success!" << std::endl; // If it finishes with no problem it was successful
 
         // Create our list of schemes and such
 
@@ -255,6 +259,19 @@ void DataParser::checkValidity() {
         std::cout << "(" << token << ", \"" << tokenStr << "\", " << lineNumber << ")" << std::endl;
     }
 
+    unsigned int next = 0;
+
+    Schemes schemes(listOfTokens, next);
+    Facts facts(listOfTokens, next);
+    Rules rules(listOfTokens, next);
+    Queries queries(listOfTokens, next);
+
+    std::cout << schemes << facts << rules << queries << facts.toDomain() << std::endl;
+
+    schemes.clean();
+    facts.clean();
+    rules.clean();
+    queries.clean();
 }
 
 // calls the grammars clean function before deleting the pointers

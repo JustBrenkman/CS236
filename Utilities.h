@@ -8,12 +8,12 @@
 #include "LexicalAnalyzer.h"
 
 class Utilities {
+public:
+    static void
+    checkFor(std::vector<LexicalAnalyzer::token_struct> &list, LexicalAnalyzer::TOKEN tokenType, unsigned int &index);
 
     static void
-    checkFor(std::vector<LexicalAnalyzer::TOKEN> *list, LexicalAnalyzer::TOKEN tokenType, unsigned int index;
-
-    static void
-    checkType(std::vector<LexicalAnalyzer::TOKEN> *list, LexicalAnalyzer::TOKEN tokenType, unsigned int index);
+    checkType(std::vector<LexicalAnalyzer::token_struct> &list, LexicalAnalyzer::TOKEN tokenType, unsigned int &index);
 
 };
 
