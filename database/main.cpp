@@ -8,9 +8,9 @@
 int main(int argc, char **argv) {
 
     auto relation = new Relation();
-    relation->addColumns("First", "Second", "Third");
+    relation->addColumns("First", "Second", "Third", "Fourth");
     relation->insertRows({{"Hello", "Hello", "Hello", "Hello"},
-                          {"Hello", "list",  "That",  "sucks"}});
+                          {"Hello", "list",  "That"}});
 
     auto second = relation->select(std::make_pair("First", "Hello"), std::make_pair("Second", "list"));
 

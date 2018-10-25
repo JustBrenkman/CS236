@@ -28,6 +28,14 @@ void Relation::insertRows(std::vector<std::string> row) {
 
 void Relation::insertRows(std::vector<std::vector<std::string>> row) {
     for (auto &r : row) {
+        if (r.size() < header.size()) {
+            std::cout << "Row is smaller than header by " << header.size() - r.size() << ", adding extra value"
+                      << std::endl;
+            for (unsigned long i = r.size(); i <= header.size() - r.size(); i++) {
+                r.emplace_back("");
+            }
+        }
+
         insertRows(r);
     }
 }
