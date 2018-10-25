@@ -4,6 +4,60 @@
 // Created by bbrenk on 10/24/18.
 //
 
+//Letter   Description  Escape-Sequence
+//-------------------------------------
+//        A        Alpha        \u0391
+//        B        Beta         \u0392
+//        Γ        Gamma        \u0393
+//        Δ        Delta        \u0394
+//        Ε        Epsilon      \u0395
+//        Ζ        Zeta         \u0396
+//        Η        Eta          \u0397
+//        Θ        Theta        \u0398
+//        Ι        Iota         \u0399
+//        Κ        Kappa        \u039A
+//        Λ        Lambda       \u039B
+//        Μ        Mu           \u039C
+//        Ν        Nu           \u039D
+//        Ξ        Xi           \u039E
+//        Ο        Omicron      \u039F
+//        Π        Pi           \u03A0
+//        Ρ        Rho          \u03A1
+//        Σ        Sigma        \u03A3
+//        Τ        Tau          \u03A4
+//        Υ        Upsilon      \u03A5
+//        Φ        Phi          \u03A6
+//        Χ        Chi          \u03A7
+//        Ψ        Psi          \u03A8
+//        Ω        Omega        \u03A9
+
+//Letter   Description  Escape-Sequence
+//-------------------------------------
+//        α        Alpha        \u03B1
+//        β        Beta         \u03B2
+//        γ        Gamma        \u03B3
+//        δ        Delta        \u03B4
+//        ε        Epsilon      \u03B5
+//        ζ        Zeta         \u03B6
+//        η        Eta          \u03B7
+//        θ        Theta        \u03B8
+//        ι        Iota         \u03B9
+//        κ        Kappa        \u03BA
+//        λ        Lambda       \u03BB
+//        μ        Mu           \u03BC
+//        ν        Nu           \u03BD
+//        ξ        Xi           \u03BE
+//        ο        Omicron      \u03BF
+//        π        Pi           \u03C0
+//        ρ        Rho          \u03C1
+//        σ        Sigma        \u03C3
+//        τ        Tau          \u03C4
+//        υ        Upsilon      \u03C5
+//        φ        Phi          \u03C6
+//        χ        Chi          \u03C7
+//        ψ        Psi          \u03C8
+//        ω        Omega        \u03C9
+
 #ifndef LAB2_RELATION_H
 #define LAB2_RELATION_H
 
@@ -12,25 +66,40 @@
 #include <list>
 #include <string>
 #include <unordered_map>
+#include <algorithm>
+#include <iomanip>
 
 class Relation {
 
 private:
     std::unordered_map<std::string, int> header;
     std::vector<std::vector<std::string>> rows;
+    std::string name = "DATABASE";
+    std::string operation = "";
     // Row definition
 
     template<typename ... list>
     std::list<std::pair<std::string, std::string>> *
     generatePairList(std::pair<std::string, std::string> pair, list...args);
-
     std::list<std::pair<std::string, std::string>> *generatePairList(std::pair<std::string, std::string> pair);
+
+    template<typename ... params>
+    std::vector<std::string> *
+    generateStringList(std::string col, params...args);
+
+    std::vector<std::string> *generateStringList(std::string col);
 
     // Private select functions to reduce a table by filtering. Makes memory management so much easier
     void select(Relation *table, std::pair<std::string, std::string> pair);
-
     void select(Relation *table, std::string columnName, std::string value);
 
+    void project(Relation *table, std::vector<std::string> cols);
+
+    void setSelectName(Relation *table, std::list<std::pair<std::string, std::string>> list);
+
+    void setRenameName(Relation *table, std::list<std::pair<std::string, std::string>> list);
+
+    void setProjectName(Relation *table, std::vector<std::string> list);
 public:
     Relation();
 
@@ -41,24 +110,34 @@ public:
     // Adds an arbitrary number of columns to the header
     template<typename ... Args>
     void addColumns(std::string first, Args... args);
-
     void addColumns(std::string name);
 
     void insertRows(std::vector<std::vector<std::string>> row);
-
     void insertRows(std::vector<std::string> row);
 
     template<typename ... pairs>
     Relation *select(std::pair<std::string, std::string> pair, pairs...args);
-
     Relation *select(std::list<std::pair<std::string, std::string>> pair);
-
     Relation *select(std::string columnName, std::string value);
 
-    Relation *project();
+    // Adds an arbitrary number of columns to the header
+    template<typename ... param>
+    Relation *project(std::string colName, param... args);
 
-    Relation *rename();
+    Relation *project(std::string col);
 
+    Relation *project(std::vector<std::string> cols);
+
+    template<typename ... pairs>
+    Relation *rename(std::pair<std::string, std::string> pair, pairs...args);
+
+    Relation *rename(std::list<std::pair<std::string, std::string>> pair);
+
+    Relation *rename(std::string columnName, std::string value);
+
+    friend std::ostream &operator<<(std::ostream &os, Relation &table);
+
+    void setName(std::string databaseName);
 };
 
 // Adds an arbitrary number of columns
@@ -87,5 +166,29 @@ Relation::generatePairList(std::pair<std::string, std::string> pair, list... arg
     return re;
 }
 
+template<typename... params>
+std::vector<std::string> *Relation::generateStringList(std::string col, params... args) {
+    std::vector<std::string> *re = generateStringList(args...);
+    re->push_back(col);
+    return re;
+}
+
+template<typename... param>
+Relation *Relation::project(std::string colName, param... args) {
+    std::vector<std::string> *list = generateStringList(colName, args...);
+    std::reverse(list->begin(), list->end());
+    auto val = project(*list);
+    delete list;
+    return val;
+}
+
+template<typename... pairs>
+Relation *Relation::rename(std::pair<std::string, std::string> pair, pairs... args) {
+    std::list<std::pair<std::string, std::string>> *list = generatePairList(pair, args...);
+    list->reverse();
+    auto val = rename(*list);
+    delete list;
+    return val;
+}
 
 #endif //LAB2_RELATION_H
