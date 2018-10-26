@@ -90,9 +90,6 @@ private:
     std::vector<std::string> *generateStringList(std::string col);
 
     // Private select functions to reduce a table by filtering. Makes memory management so much easier
-    void select(Relation *table, std::pair<std::string, std::string> pair);
-    void select(Relation *table, std::string columnName, std::string value);
-
     void project(Relation *table, std::vector<std::string> cols);
 
     void setSelectName(Relation *table, std::list<std::pair<std::string, std::string>> list);
@@ -115,29 +112,27 @@ public:
     void insertRows(std::vector<std::vector<std::string>> row);
     void insertRows(std::vector<std::string> row);
 
+    // Select functions
     template<typename ... pairs>
     Relation *select(std::pair<std::string, std::string> pair, pairs...args);
     Relation *select(std::list<std::pair<std::string, std::string>> pair);
     Relation *select(std::string columnName, std::string value);
 
-    // Adds an arbitrary number of columns to the header
+    // Project Functions
     template<typename ... param>
     Relation *project(std::string colName, param... args);
-
     Relation *project(std::string col);
-
     Relation *project(std::vector<std::string> cols);
 
+    // Rename functions
     template<typename ... pairs>
     Relation *rename(std::pair<std::string, std::string> pair, pairs...args);
-
     Relation *rename(std::list<std::pair<std::string, std::string>> pair);
-
     Relation *rename(std::string columnName, std::string value);
 
     friend std::ostream &operator<<(std::ostream &os, Relation &table);
 
-    void setName(std::string databaseName);
+    void setName(std::string an);
 };
 
 // Adds an arbitrary number of columns

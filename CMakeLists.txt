@@ -14,8 +14,8 @@ add_executable(lab2 ${SOURCE_FILES})
 # Lab3 stuff
 project(lab3)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS -Werror)
 
 file(GLOB SOURCE_FILES database/*.cpp database/*.h)
-
 
 add_executable(lab3 ${SOURCE_FILES})

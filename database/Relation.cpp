@@ -9,26 +9,24 @@
 
 Relation::Relation() = default;
 
+/**
+ * Copy constructor
+ * @param refTable table to copy
+ */
 Relation::Relation(const Relation &refTable) {
     header = std::unordered_map<std::string, int>(refTable.header);
-//    rows = std::vector<std::vector<std::string>>(refTable.rows);
-
     rows.assign(refTable.rows.begin(), refTable.rows.end());
-
-//    for (auto &r1 : refTable.rows) {
-//        std::vector<std::string> row;
-//        row.reserve(r1.size());
-//        for (auto &r2 : r1) {
-//            row.push_back(r2);
-//        }
-//        rows.push_back(row);
-//    }
-
 }
 
+/**
+ * Default deconstructor
+ */
 Relation::~Relation() = default;
 
-
+/**
+ * adds a column
+ * @param name of column
+ */
 void Relation::addColumns(std::string name) {
 
     if (header.find(name) != header.end())
@@ -37,10 +35,18 @@ void Relation::addColumns(std::string name) {
     header[name] = static_cast<int>(header.size()) + 1;
 }
 
+/**
+ * Inserts a vector as a row into the table
+ * @param row list of strings making up the row
+ */
 void Relation::insertRows(std::vector<std::string> row) {
     rows.push_back(row);
 }
 
+/**
+ * Inserts a list of rows into the table
+ * @param row list of rows
+ */
 void Relation::insertRows(std::vector<std::vector<std::string>> row) {
     for (auto &r : row) {
         if (r.size() < header.size()) {
@@ -50,23 +56,38 @@ void Relation::insertRows(std::vector<std::vector<std::string>> row) {
                 r.emplace_back("");
             }
         }
-
         insertRows(r);
     }
 }
 
+/**
+ * internal function to help with variadic functions
+ * @param pair
+ * @return
+ */
 std::list<std::pair<std::string, std::string>> *Relation::generatePairList(std::pair<std::string, std::string> pair) {
     auto re = new std::list<std::pair<std::string, std::string>>();
     re->push_back(pair);
     return re;
 }
 
+/**
+ * internal function to help with variadic functions
+ * @param col
+ * @return
+ */
 std::vector<std::string> *Relation::generateStringList(std::string col) {
     auto re = new std::vector<std::string>();
     re->push_back(col);
     return re;
 }
 
+/**
+ * Sets the operation that was performed on the table
+ * Easy way to follow a series of changes
+ * @param table the table being performed on
+ * @param list the list of operations being performed
+ */
 void Relation::setSelectName(Relation *table, std::list<std::pair<std::string, std::string>> list) {
     std::string operators;
     operators.append("\u03C3");
@@ -86,6 +107,12 @@ void Relation::setSelectName(Relation *table, std::list<std::pair<std::string, s
     table->operation = operators;
 }
 
+/**
+ * Sets the operation that was performed on the table
+ * Easy way to follow a series of changes
+ * @param table the table being performed on
+ * @param list the list of operations being performed
+ */
 void Relation::setRenameName(Relation *table, std::list<std::pair<std::string, std::string>> list) {
     std::string operators;
     operators.append("\u03C1");
@@ -105,6 +132,12 @@ void Relation::setRenameName(Relation *table, std::list<std::pair<std::string, s
     table->operation = operators;
 }
 
+/**
+ * Sets the operation that was performed on the table
+ * Easy way to follow a series of changes
+ * @param table the table being performed on
+ * @param list the list of operations being performed
+ */
 void Relation::setProjectName(Relation *table, std::vector<std::string> list) {
     std::string operators;
     operators.append("\u03C0");
@@ -122,6 +155,10 @@ void Relation::setProjectName(Relation *table, std::vector<std::string> list) {
     table->operation = operators;
 }
 
+/**
+ * Sets the name of the table, default is DATABASE
+ * @param an name
+ */
 void Relation::setName(std::string an) {
     name = std::move(an);
 }
@@ -141,32 +178,37 @@ Relation *Relation::select(std::string columnName, std::string value) {
     return select({std::make_pair(columnName, value)});
 }
 
+/**
+ * This function returns a new table based on the list of select paramaters
+ * input into the function call, can do both Col-Col and Col-Value selections
+ * @param list this is the list of pairs that the select must be performed on
+ * @return returns a new table based on the select
+ */
 Relation *Relation::select(std::list<std::pair<std::string, std::string>> list) {
 
     auto table = new Relation();
 
-    setSelectName(table, list);
+    setSelectName(table, list); // Helps make things look pretty when we print the table
 
-//    for (auto &p : list) {
-//        if (header.find(p.first) != header.end()) {
-//            table->addColumns(p.second);
-//        } else {
-//            throw std::string("Column does not exist");
-//        }
-//    }
+    table->header = header; // Copy the header over, they don't change
 
-    table->header = header;
-
+    // Checks the columns in the table to see which ones are the same as the values provided
+    // Fancy smanshy stuff here
     for (auto &r : rows) {
         bool flag = true;
         for (auto &p : list) {
-            if (r.at(static_cast<unsigned long>(header[p.first]) - 1) != p.second) {
+            if (header.find(p.second) != header.end()) {
+                if (r.at(static_cast<unsigned long>(header[p.first] - 1)) != r.at(
+                        static_cast<unsigned long>(header[p.second] - 1))) {
+                    flag = false;
+                    break;
+                }
+            } else if (r.at(static_cast<unsigned long>(header[p.first]) - 1) != p.second) {
                 flag = false;
                 break;
             }
         }
-
-        if (flag) {
+        if (flag) { // if it is a match then we flag the row to add to the new table.
             std::vector<std::string> newRow;
             for (auto &p : list) {
                 newRow.push_back(r.at(static_cast<unsigned long>(header[p.first]) - 1));
@@ -178,19 +220,11 @@ Relation *Relation::select(std::list<std::pair<std::string, std::string>> list) 
     return table;
 }
 
-void Relation::select(Relation *table, std::pair<std::string, std::string> pair) {
-    select(table, pair.first, pair.second);
-}
-
-void Relation::select(Relation *table, std::string columnName, std::string value) {
-    if (table) {
-        std::cout << "Table is empty, attempting to copy" << std::endl;
-    }
-
-    std::cout << "Do selection query" << std::endl;
-}
-
-
+/**
+ * Projects a table and returns a new table holding the result
+ * @param table Table that holds the result
+ * @param cols list of columns to project
+ */
 void Relation::project(Relation *table, std::vector<std::string> cols) {
     setProjectName(table, cols);
 
@@ -212,18 +246,33 @@ void Relation::project(Relation *table, std::vector<std::string> cols) {
     }
 }
 
+/**
+ * Projects a table and returns a new table holding the result
+ * @param col column to project
+ * @return table holding the result
+ */
 Relation *Relation::project(std::string col) {
     auto table = new Relation();
     project(table, {std::move(col)});
     return table;
 }
 
+/**
+ * Projects a table and returns a new table holding the result
+ * @param cols columns to project
+ * @return able holding the result
+ */
 Relation *Relation::project(std::vector<std::string> cols) {
     auto table = new Relation();
     project(table, std::move(cols));
     return table;
 }
 
+/**
+ * Renames a tables columns and returns a new table holding resulting change
+ * @param pair Columns to change and value to change them to
+ * @return table that holds result
+ */
 Relation *Relation::rename(std::list<std::pair<std::string, std::string>> pair) {
     auto table = new Relation(*this);
 
@@ -239,15 +288,36 @@ Relation *Relation::rename(std::list<std::pair<std::string, std::string>> pair) 
     return table;
 }
 
+/**
+ * Renames a tables columns and returns a new table holding resulting change
+ * @param columnName Column to change
+ * @param value value to change them to
+ * @return table that holds result
+ */
 Relation *Relation::rename(std::string columnName, std::string value) {
     return rename({std::make_pair(columnName, value)});
 }
 
+// Strictly a helper function, not part of the class
+void getLargestColWidth(std::vector<unsigned int> &col, std::vector<std::vector<std::string>> &table) {
+    for (auto &r1 : table) {
+        for (unsigned int i = 0; i < r1.size(); i++) {
+            col.at(i) = static_cast<unsigned int>((r1.at(i).size() > col.at(i)) ? r1.at(i).size() : col.at(i));
+        }
+    }
+}
+
+/**
+ * Prints out tables all fancy
+ * @param os std::cout
+ * @param table << Relation()
+ * @return std::ostream
+ */
 std::ostream &operator<<(std::ostream &os, Relation &table) {
 
     os << table.name << " = " << table.operation << std::endl;
 
-    std::vector<int> columnWidths(table.header.size());
+    std::vector<unsigned int> columnWidths(table.header.size());
     std::vector<std::string> headers(table.header.size());
 
     for (auto &h : table.header) {
@@ -255,12 +325,7 @@ std::ostream &operator<<(std::ostream &os, Relation &table) {
         headers.at(static_cast<unsigned long>(h.second) - 1) = h.first;
     }
 
-    for (auto &r1 : table.rows) {
-        for (unsigned int i = 0; i < r1.size(); i++) {
-            columnWidths.at(i) = static_cast<int>((r1.at(i).size() > columnWidths.at(i)) ? r1.at(i).size()
-                                                                                         : columnWidths.at(i));
-        }
-    }
+    getLargestColWidth(columnWidths, table.rows);
 
     unsigned int width = 1;
     for (auto &c : columnWidths) {
@@ -274,7 +339,6 @@ std::ostream &operator<<(std::ostream &os, Relation &table) {
     os << "|";
 
     for (unsigned int i = 0; i < headers.size(); i++) {
-//        os << spacer << h << spacer << "|";
         os << spacer << std::left << std::setfill(' ') << std::setw(columnWidths.at(i)) << headers.at(i) << spacer
            << "|";
     }
@@ -285,7 +349,7 @@ std::ostream &operator<<(std::ostream &os, Relation &table) {
         os << "|";
         for (unsigned int i = 0; i < r1.size(); i++) {
             os << spacer << std::left << std::setfill(' ') << std::setw(columnWidths.at(i)) << r1.at(i) << spacer
-               << "|";
+                    << "|";
         }
         os << std::endl;
     }
