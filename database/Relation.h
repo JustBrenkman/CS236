@@ -70,6 +70,7 @@
 #include <unordered_map>
 #include <algorithm>
 #include <iomanip>
+#include <set>
 
 class Relation {
 
@@ -122,7 +123,6 @@ public:
     // Project Functions
     template<typename ... param>
     Relation *project(std::string colName, param... args);
-
     Relation *project(std::vector<std::string> cols);
     Relation *project(std::string col);
 
@@ -135,6 +135,8 @@ public:
     friend std::ostream &operator<<(std::ostream &os, Relation &table);
 
     void setName(std::string an);
+
+    void removeDuplicateEntries();
 };
 
 // Adds an arbitrary number of columns
@@ -152,6 +154,7 @@ Relation *Relation::select(std::pair<std::string, std::string> pair, pairs... ar
     list->reverse();
     auto val = select(*list);
     delete list;
+    val->removeDuplicateEntries();
     return val;
 }
 
@@ -176,6 +179,7 @@ Relation *Relation::project(std::string colName, param... args) {
     std::reverse(list->begin(), list->end());
     auto val = project(*list);
     delete list;
+    val->removeDuplicateEntries();
     return val;
 }
 
@@ -185,6 +189,7 @@ Relation *Relation::rename(std::pair<std::string, std::string> pair, pairs... ar
     list->reverse();
     auto val = rename(*list);
     delete list;
+    val->removeDuplicateEntries();
     return val;
 }
 

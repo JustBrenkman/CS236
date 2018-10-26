@@ -6,27 +6,6 @@
 #include "Relation.h"
 
 int main(int argc, char **argv) {
-//    auto relation = new Relation();
-//    relation->addColumns("A", "B", "C", "D");
-//    relation->insertRows({{"Hello", "Hello", "Hello", "Hello"},
-//                          {"Hello", "list",  "That",  "Super long string just for fun"}});
-//    relation->setName("R");
-//
-//    auto second = relation->select(std::make_pair("A", "Hello"), std::make_pair("B", "C"));
-//    second->setName("Q");
-//    auto third = relation->project("A", "D");
-//    auto fourth = relation->rename(std::make_pair("A", "1"), std::make_pair("B", "2"), std::make_pair("C", "3"), std::make_pair("D", "4"));
-//
-//    std::cout << "DATABASE: RELATION" << std::endl << *relation << std::endl;
-//    std::cout << "SELECT:" << std::endl << *second << std::endl;
-//    std::cout << "PROJECT:" << std::endl << *third << std::endl;
-//    std::cout << "RENAME:" << std::endl << *fourth << std::endl;
-//
-//    delete relation;
-//    delete second;
-//    delete third;
-//    delete fourth;
-
     // Test Case 1, 2, 3, 4
     auto Q = new Relation();
     Q->setName("Q");
@@ -74,6 +53,48 @@ int main(int argc, char **argv) {
     delete M;
     delete N;
     delete P;
+
+    auto SK = new Relation();
+    SK->setName("SK");
+    SK->addColumns("A", "B");
+    SK->insertRows({{"a", "c"},
+                    {"b", "c"},
+                    {"b", "b"},
+                    {"b", "c", ""}});
+
+    std::cout << *SK << std::endl;
+
+    // Query Test 1 SK(A, 'c');
+    auto project1 = SK->select(std::make_pair("B", "c"));
+    auto result = project1->project("A");
+    std::cout << *result << std::endl;
+
+    delete project1;
+    delete result;
+
+    // Query Test 2 SK('b', 'c');
+    result = SK->select(std::make_pair("A", "b"), std::make_pair("B", "c"));
+    result->setName("Result");
+    std::cout << *result << std::endl;
+    delete result;
+
+    auto table2 = SK->select(std::make_pair("A", "B"));
+    table2->setName("S");
+    auto table3 = table2->rename(std::make_pair("A", "X"));
+    table3->setName("K");
+    result = table3->project("X");
+    result->setName("Result");
+    std::cout << *result << std::endl;
+
+    delete table2;
+    delete table3;
+
+    result = SK->project("A", "B");
+    result->setName("Result");
+    std::cout << *result << std::endl;
+
+    delete SK;
+    delete result;
 
     return 0;
 }

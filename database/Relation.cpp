@@ -56,7 +56,8 @@ void Relation::insertRows(std::vector<std::vector<std::string>> row) {
                 r.emplace_back("");
             }
         }
-        insertRows(r);
+        insertRows(std::vector<std::string>(r.begin(),
+                                            r.begin() + header.size())); // This clips the row to match header length
     }
 }
 
@@ -198,12 +199,14 @@ Relation *Relation::select(std::list<std::pair<std::string, std::string>> list) 
         bool flag = true;
         for (auto &p : list) {
             if (header.find(p.second) != header.end()) {
+                // This is a column = column select
                 if (r.at(static_cast<unsigned long>(header[p.first] - 1)) != r.at(
                         static_cast<unsigned long>(header[p.second] - 1))) {
                     flag = false;
                     break;
                 }
             } else if (r.at(static_cast<unsigned long>(header[p.first]) - 1) != p.second) {
+                // This is a column = value select
                 flag = false;
                 break;
             }
@@ -216,7 +219,7 @@ Relation *Relation::select(std::list<std::pair<std::string, std::string>> list) 
             table->insertRows(r);
         }
     }
-
+    table->removeDuplicateEntries();
     return table;
 }
 
@@ -254,6 +257,7 @@ void Relation::project(Relation *table, std::vector<std::string> cols) {
 Relation *Relation::project(std::string col) {
     auto table = new Relation();
     project(table, {std::move(col)});
+    removeDuplicateEntries();
     return table;
 }
 
@@ -265,6 +269,7 @@ Relation *Relation::project(std::string col) {
 Relation *Relation::project(std::vector<std::string> cols) {
     auto table = new Relation();
     project(table, std::move(cols));
+    table->removeDuplicateEntries();
     return table;
 }
 
@@ -285,6 +290,7 @@ Relation *Relation::rename(std::list<std::pair<std::string, std::string>> pair) 
             table->header[p.second] = temp;
         }
     }
+    table->removeDuplicateEntries();
     return table;
 }
 
@@ -301,7 +307,7 @@ Relation *Relation::rename(std::string columnName, std::string value) {
 // Strictly a helper function, not part of the class
 void getLargestColWidth(std::vector<unsigned int> &col, std::vector<std::vector<std::string>> &table) {
     for (auto &r1 : table) {
-        for (unsigned int i = 0; i < r1.size(); i++) {
+        for (unsigned int i = 0; i < col.size(); i++) {
             col.at(i) = static_cast<unsigned int>((r1.at(i).size() > col.at(i)) ? r1.at(i).size() : col.at(i));
         }
     }
@@ -347,7 +353,7 @@ std::ostream &operator<<(std::ostream &os, Relation &table) {
 
     for (auto &r1 : table.rows) {
         os << "|";
-        for (unsigned int i = 0; i < r1.size(); i++) {
+        for (unsigned int i = 0; i < columnWidths.size(); i++) {
             os << spacer << std::left << std::setfill(' ') << std::setw(columnWidths.at(i)) << r1.at(i) << spacer
                     << "|";
         }
@@ -356,4 +362,14 @@ std::ostream &operator<<(std::ostream &os, Relation &table) {
     os << "+" << std::internal << std::setw(width - 1) << std::setfill('-') << "+" << std::endl;
 
     return os;
+}
+
+/**
+ * Removes duplicates by converting to set
+ */
+void Relation::removeDuplicateEntries() {
+//    std::sort(rows.begin(), rows.end());
+//    rows.erase(std::unique(rows.begin(), rows.end(), rows.end()));
+    std::set<std::vector<std::string>> s(rows.begin(), rows.end());
+    rows.assign(s.begin(), s.end());
 }
