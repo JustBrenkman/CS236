@@ -1,8 +1,10 @@
 #include <utility>
 
-//
-// Created by bbrenk on 10/24/18.
-//
+/*
+ * Purpose: This is a basic table class that can perform select, project and rename relational algebra functions
+ * Author: Ben Brenkman
+ * Date: 10/25/2018
+ */
 
 //Letter   Description  Escape-Sequence
 //-------------------------------------
@@ -74,9 +76,8 @@ class Relation {
 private:
     std::unordered_map<std::string, int> header;
     std::vector<std::vector<std::string>> rows;
-    std::string name = "DATABASE";
+    std::string name = "TABLE";
     std::string operation = "";
-    // Row definition
 
     template<typename ... list>
     std::list<std::pair<std::string, std::string>> *
@@ -99,7 +100,6 @@ private:
     void setProjectName(Relation *table, std::vector<std::string> list);
 public:
     Relation();
-
     Relation(const Relation &reftable);
 
     ~Relation();
@@ -109,6 +109,7 @@ public:
     void addColumns(std::string first, Args... args);
     void addColumns(std::string name);
 
+    // Row insertion functions
     void insertRows(std::vector<std::vector<std::string>> row);
     void insertRows(std::vector<std::string> row);
 
@@ -121,8 +122,9 @@ public:
     // Project Functions
     template<typename ... param>
     Relation *project(std::string colName, param... args);
-    Relation *project(std::string col);
+
     Relation *project(std::vector<std::string> cols);
+    Relation *project(std::string col);
 
     // Rename functions
     template<typename ... pairs>

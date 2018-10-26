@@ -156,7 +156,7 @@ void Relation::setProjectName(Relation *table, std::vector<std::string> list) {
 }
 
 /**
- * Sets the name of the table, default is DATABASE
+ * Sets the name of the table, default is TABLE
  * @param an name
  */
 void Relation::setName(std::string an) {
