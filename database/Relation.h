@@ -73,12 +73,17 @@
 #include <set>
 
 class Relation {
-
+public:
+    enum operationPrintComp {
+        SIMPLE, CHAINED
+    };
 private:
     std::unordered_map<std::string, int> header;
     std::vector<std::vector<std::string>> rows;
     std::string name = "TABLE";
     std::string operation = "";
+    std::string operationComplex = "";
+    static operationPrintComp opPrintComp;
 
     template<typename ... list>
     std::list<std::pair<std::string, std::string>> *
@@ -99,10 +104,10 @@ private:
     void setRenameName(Relation *table, std::list<std::pair<std::string, std::string>> list);
 
     void setProjectName(Relation *table, std::vector<std::string> list);
+
 public:
     Relation();
     Relation(const Relation &reftable);
-
     ~Relation();
 
     // Adds an arbitrary number of columns to the header
@@ -134,9 +139,12 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, Relation &table);
 
-    void setName(std::string an);
+    bool operator==(const Relation &a);
 
+    void setName(std::string an);
     void removeDuplicateEntries();
+
+    static void setPrintCom(Relation::operationPrintComp com);
 };
 
 // Adds an arbitrary number of columns

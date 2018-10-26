@@ -9,6 +9,8 @@
 
 Relation::Relation() = default;
 
+//Relation::operationPrintComp = SIMPLE;
+Relation::operationPrintComp Relation::opPrintComp = SIMPLE;
 /**
  * Copy constructor
  * @param refTable table to copy
@@ -40,7 +42,7 @@ void Relation::addColumns(std::string name) {
  * @param row list of strings making up the row
  */
 void Relation::insertRows(std::vector<std::string> row) {
-    rows.push_back(row);
+    rows.emplace_back(row.begin(), row.begin() + header.size());
 }
 
 /**
@@ -56,8 +58,7 @@ void Relation::insertRows(std::vector<std::vector<std::string>> row) {
                 r.emplace_back("");
             }
         }
-        insertRows(std::vector<std::string>(r.begin(),
-                                            r.begin() + header.size())); // This clips the row to match header length
+        insertRows(r); // This clips the row to match header length
     }
 }
 
@@ -91,6 +92,7 @@ std::vector<std::string> *Relation::generateStringList(std::string col) {
  */
 void Relation::setSelectName(Relation *table, std::list<std::pair<std::string, std::string>> list) {
     std::string operators;
+    std::string complex;
     operators.append("\u03C3");
     operators.append("(");
     for (auto &l : list) {
@@ -101,11 +103,16 @@ void Relation::setSelectName(Relation *table, std::list<std::pair<std::string, s
     }
     operators.erase(operators.end() - 1);
     operators.append("(");
+    complex = operators;
     operators.append(this->name);
+    complex.append((this->operation == "") ? this->name : this->operation);
     operators.append(")");
     operators.append(")");
+    complex.append(")");
+    complex.append(")");
 
     table->operation = operators;
+    table->operationComplex = complex;
 }
 
 /**
@@ -116,6 +123,7 @@ void Relation::setSelectName(Relation *table, std::list<std::pair<std::string, s
  */
 void Relation::setRenameName(Relation *table, std::list<std::pair<std::string, std::string>> list) {
     std::string operators;
+    std::string complex;
     operators.append("\u03C1");
     operators.append("(");
     for (auto &l : list) {
@@ -126,11 +134,16 @@ void Relation::setRenameName(Relation *table, std::list<std::pair<std::string, s
     }
     operators.erase(operators.end() - 1);
     operators.append("(");
+    complex = operators;
     operators.append(this->name);
+    complex.append((this->operation == "") ? this->name : this->operation);
     operators.append(")");
     operators.append(")");
+    complex.append(")");
+    complex.append(")");
 
     table->operation = operators;
+    table->operationComplex = complex;
 }
 
 /**
@@ -141,6 +154,7 @@ void Relation::setRenameName(Relation *table, std::list<std::pair<std::string, s
  */
 void Relation::setProjectName(Relation *table, std::vector<std::string> list) {
     std::string operators;
+    std::string complex;
     operators.append("\u03C0");
     operators.append("(");
     for (auto &l : list) {
@@ -149,11 +163,16 @@ void Relation::setProjectName(Relation *table, std::vector<std::string> list) {
     }
     operators.erase(operators.end() - 1);
     operators.append("(");
+    complex = operators;
     operators.append(this->name);
+    complex.append((this->operation == "") ? this->name : this->operation);
     operators.append(")");
     operators.append(")");
+    complex.append(")");
+    complex.append(")");
 
     table->operation = operators;
+    table->operationComplex = complex;
 }
 
 /**
@@ -257,7 +276,7 @@ void Relation::project(Relation *table, std::vector<std::string> cols) {
 Relation *Relation::project(std::string col) {
     auto table = new Relation();
     project(table, {std::move(col)});
-    removeDuplicateEntries();
+    table->removeDuplicateEntries();
     return table;
 }
 
@@ -321,7 +340,8 @@ void getLargestColWidth(std::vector<unsigned int> &col, std::vector<std::vector<
  */
 std::ostream &operator<<(std::ostream &os, Relation &table) {
 
-    os << table.name << " = " << table.operation << std::endl;
+    os << table.name << " = "
+       << ((Relation::opPrintComp == Relation::SIMPLE) ? table.operation : table.operationComplex) << std::endl;
 
     std::vector<unsigned int> columnWidths(table.header.size());
     std::vector<std::string> headers(table.header.size());
@@ -372,4 +392,17 @@ void Relation::removeDuplicateEntries() {
 //    rows.erase(std::unique(rows.begin(), rows.end(), rows.end()));
     std::set<std::vector<std::string>> s(rows.begin(), rows.end());
     rows.assign(s.begin(), s.end());
+}
+
+void Relation::setPrintCom(Relation::operationPrintComp com) {
+    Relation::opPrintComp = com;
+}
+
+/*
+ * Need to overload case we have some vars in here that are not some even if the tables contain the same data
+ */
+bool Relation::operator==(const Relation &a) {
+    if (header != a.header) return false;
+    if (rows != a.rows) return false;
+    return true;
 }
