@@ -4,6 +4,7 @@
 
 #include "Query.h"
 
+
 Query::Query(std::vector<LexicalAnalyzer::token_struct> &list, unsigned int &index) : Predicate(list, index) {
     Utilities::checkFor(list, LexicalAnalyzer::Q_MARK, index);
 }

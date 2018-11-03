@@ -4,11 +4,7 @@ Purpose: Creates a list of inputs based on the input file
 */
 
 #include "DataParser.h"
-#include "Schemes.h"
-#include "Facts.h"
-#include "Rules.h"
-#include "Queries.h"
-#include "database/Interpreter.h"
+#include "../database/Interpreter.h"
 
 #define CREATE_GRAMMAR Grammar<LexicalAnalyzer::TOKEN>::createGrammar
 #define CREATE_TERM Grammar<LexicalAnalyzer::TOKEN>::createTerm()
@@ -257,16 +253,12 @@ void DataParser::checkValidity() {
 
         std::cout << schemes << facts << rules << queries << facts.toDomain() << std::endl;
 
+        interperet(schemes, facts, rules, queries);
+
         schemes.clean();
         facts.clean();
         rules.clean();
         queries.clean();
-
-        auto interp = Interpreter::generateRelations(facts);
-        Interpreter::proccessQueries(interp, queries);
-
-        std::cout << *interp << std::endl;
-        delete interp;
 
     } catch (std::string &e) {
         std::cout << "Failed: " << e << index << std::endl;
@@ -279,6 +271,14 @@ void DataParser::checkValidity() {
         std::string tokenStr = listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).tokenStr;
         std::cout << "  (" << token << ",\"" << tokenStr << "\"," << lineNumber << ")" << std::endl;
     }
+}
+
+void DataParser::interperet(Schemes &schemes, Facts &facts, Rules &rules, Queries &queries) {
+    auto interp = Interpreter::generateRelations(schemes, facts);
+    Interpreter::proccessQueries(interp, queries);
+
+    std::cout << *interp << std::endl;
+    delete interp;
 }
 
 // calls the grammars clean function before deleting the pointers

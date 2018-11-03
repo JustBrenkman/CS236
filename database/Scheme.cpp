@@ -17,6 +17,19 @@ Scheme::Scheme(std::vector<LexicalAnalyzer::token_struct> &list, unsigned int &i
     Utilities::checkFor(list, LexicalAnalyzer::RIGHT_PARAM, index);
 }
 
+std::string Scheme::getName() {
+    return id->toString();
+}
+
+std::vector<std::string> Scheme::getColumnNames() {
+    std::vector<std::string> list;
+    list.reserve(ids.size());
+    for (auto i : ids) {
+        list.push_back((*i).toString());
+    }
+    return list;
+}
+
 void Scheme::clean() {
     delete id;
 

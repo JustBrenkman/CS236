@@ -11,7 +11,6 @@
 class Facts {
 private:
     std::vector<Fact *> facts;
-
 public:
     Facts(std::vector<LexicalAnalyzer::token_struct> &list, unsigned int &index);
 

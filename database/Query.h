@@ -10,6 +10,10 @@
 class Query : public Predicate {
 public:
     Query(std::vector<LexicalAnalyzer::token_struct> &list, unsigned int &index);
+
+    std::string getName();
+
+    std::vector<std::string> getParams();
 };
 
 

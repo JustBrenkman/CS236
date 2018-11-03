@@ -22,3 +22,7 @@ void Queries::clean() {
     }
 }
 
+std::vector<Query *> Queries::getQueries() {
+    return queries;
+}
+

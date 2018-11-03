@@ -9,6 +9,10 @@ Purpose: Creates a list of inputs based on the input file
 #include "LexicalAnalyzer.h"
 #include "Grammar.h"
 #include "GrammarException.h"
+#include "Schemes.h"
+#include "Facts.h"
+#include "Rules.h"
+#include "Queries.h"
 
 class DataParser {
 private:
@@ -19,6 +23,8 @@ public:
     explicit DataParser(LexicalAnalyzer *lexicalAnalyzer);
 
     void checkValidity();
+
+    void interperet(Schemes &schemes, Facts &facts, Rules &rules, Queries &queries);
 
     void clean();
 

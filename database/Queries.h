@@ -23,6 +23,8 @@ public:
         return os;
     }
 
+    std::vector<Query *> getQueries();
+
     void clean();
 };
 

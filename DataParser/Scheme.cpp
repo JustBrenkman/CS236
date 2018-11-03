@@ -24,3 +24,14 @@ void Scheme::clean() {
         delete i;
     }
 }
+
+std::string Scheme::getName() {
+    return id->toString();
+}
+
+std::vector<std::string> Scheme::getColumnNames() {
+    std::vector<std::string> list;
+    list.reserve(ids.size());
+    for (auto &i : ids) { list.push_back(i->toString()); }
+    return std::vector<std::string>();
+}

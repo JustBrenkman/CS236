@@ -8,7 +8,7 @@
 #include "Id.h"
 
 class Predicate {
-private:
+protected:
     Id *id;
     std::vector<Parameter *> parameters;
 public:

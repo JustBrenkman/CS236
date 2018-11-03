@@ -35,3 +35,7 @@ void Fact::clean() {
     }
 }
 
+std::string Fact::getName() {
+    return id->toString();
+}
+

@@ -5,6 +5,7 @@
 #include "Facts.h"
 #include "Domain.h"
 
+
 Facts::Facts(std::vector<LexicalAnalyzer::token_struct> &list, unsigned int &index) {
     Utilities::checkFor(list, LexicalAnalyzer::FACTS, index);
     Utilities::checkFor(list, LexicalAnalyzer::COLON, index);

@@ -4,10 +4,6 @@ Purpose: Creates a list of inputs based on the input file
 */
 
 #include "DataParser.h"
-#include "Schemes.h"
-#include "Facts.h"
-#include "Rules.h"
-#include "Queries.h"
 
 #define CREATE_GRAMMAR Grammar<LexicalAnalyzer::TOKEN>::createGrammar
 #define CREATE_TERM Grammar<LexicalAnalyzer::TOKEN>::createTerm()
@@ -244,7 +240,7 @@ void DataParser::checkValidity() {
         if (index < tokens.size() && tokens.at(static_cast<unsigned long>(index)) != LexicalAnalyzer::EOF_TOKEN)
             throw GrammarException(index, "", "");
 
-        std::cout << "Success!" << std::endl; // If it finishes with no problem it was successful
+//        std::cout << "Success!" << std::endl; // If it finishes with no problem it was successful
 
         // Create our list of schemes and such
         unsigned int next = 0;
@@ -254,7 +250,8 @@ void DataParser::checkValidity() {
         Rules rules(listOfTokens, next);
         Queries queries(listOfTokens, next);
 
-        std::cout << schemes << facts << rules << queries << facts.toDomain() << std::endl;
+//        std::cout << schemes << facts << rules << queries << facts.toDomain() << std::endl;
+        interperet(schemes, facts, rules, queries);
 
         schemes.clean();
         facts.clean();
@@ -263,15 +260,23 @@ void DataParser::checkValidity() {
 
     } catch (std::string &e) {
         std::cout << "Failed: " << e << index << std::endl;
-    } catch (GrammarException &grammarException) {
-        // Just checking for those failed terms
-        std::cout << "Failure!" << std::endl;
-        std::string token = LexicalAnalyzer::enumToString(
-                listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).token);
-        int lineNumber = listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).lineNumber;
-        std::string tokenStr = listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).tokenStr;
-        std::cout << "  (" << token << ",\"" << tokenStr << "\"," << lineNumber << ")" << std::endl;
     }
+//  catch (GrammarException &grammarException) {
+//        // Just checking for those failed terms
+//        std::cout << "Failure!" << std::endl;
+//        std::string token = LexicalAnalyzer::enumToString(
+//                listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).token);
+//        int lineNumber = listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).lineNumber;
+//        std::string tokenStr = listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).tokenStr;
+//        std::cout << "  (" << token << ",\"" << tokenStr << "\"," << lineNumber << ")" << std::endl;
+//    }
+}
+
+void DataParser::interperet(Schemes &schemes, Facts &facts, Rules &rules, Queries &queries) {
+    auto interp = Interpreter::generateRelations(schemes, facts);
+    Interpreter::proccessQueries(interp, queries);
+//    std::cout << *interp << std::endl;
+    delete interp;
 }
 
 // calls the grammars clean function before deleting the pointers

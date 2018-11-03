@@ -6,14 +6,20 @@
 #define LAB3_INTERPRETER_H
 
 
-#include "../Facts.h"
+#include "Facts.h"
 #include "Queries.h"
-#include "../Schemes.h"
+#include "Schemes.h"
 #include "Relation.h"
 
 class Interpreter {
 private:
-    std::vector<Relation> relations;
+
+protected:
+    std::vector<Relation *> relations;
+
+    void addRelation(Relation *relation);
+
+    void printResults(Query *query, Relation *table);
 public:
 //    Interpreter();
     ~Interpreter();

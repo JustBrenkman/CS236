@@ -191,6 +191,10 @@ public:
                 fsm->triggerStateChangeEvent(WHITESPACE, this);
                 fsm->switchStates("whitespace");
                 break;
+            case '\t':
+                fsm->triggerStateChangeEvent(WHITESPACE, this);
+                fsm->switchStates("whitespace");
+                break;
             case '\n':
                 break;
             case '\0':

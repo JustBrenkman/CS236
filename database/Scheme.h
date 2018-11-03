@@ -30,6 +30,10 @@ public:
         return os;
     }
 
+    std::string getName();
+
+    std::vector<std::string> getColumnNames();
+
     void clean();
 };
 

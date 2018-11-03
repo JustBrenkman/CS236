@@ -25,6 +25,39 @@ Relation::Relation(const Relation &refTable) {
  */
 Relation::~Relation() = default;
 
+std::string Relation::getName() {
+    return name;
+}
+
+bool Relation::isEmpty() {
+    return rows.empty();
+}
+
+int Relation::getRowCount() {
+    return rows.size();
+}
+
+std::vector<std::vector<std::string>> Relation::getRows() {
+    return rows;
+}
+
+std::unordered_map<std::string, int> Relation::getHeadersMap() {
+    return header;
+}
+
+std::vector<std::string> Relation::getheaders() {
+    std::vector<std::string> list;
+//    std::cout << "List size:" << list.size() << std::endl;
+    for (unsigned int i = 0; i < header.size(); i++)
+        list.push_back("");
+
+    for (auto &h :header) {
+//        std::cout << h.second << std::endl;
+        list.at(static_cast<unsigned long>(h.second - 1)) = h.first;
+    }
+    return list;
+}
+
 /**
  * adds a column
  * @param name of column
@@ -35,6 +68,11 @@ void Relation::addColumns(std::string name) {
         return;
 
     header[name] = static_cast<int>(header.size()) + 1;
+}
+
+void Relation::addColumns(std::vector<std::string> columns) {
+    for (auto &c : columns)
+        addColumns(c);
 }
 
 /**
@@ -97,6 +135,37 @@ void Relation::setSelectName(Relation *table, std::list<std::pair<std::string, s
     operators.append("(");
     for (auto &l : list) {
         operators.append(l.first);
+        operators.append("=");
+        operators.append(l.second);
+        operators.append("^");
+    }
+    operators.erase(operators.end() - 1);
+    operators.append("(");
+    complex = operators;
+    operators.append(this->name);
+    complex.append((this->operation == "") ? this->name : this->operation);
+    operators.append(")");
+    operators.append(")");
+    complex.append(")");
+    complex.append(")");
+
+    table->operation = operators;
+    table->operationComplex = complex;
+}
+
+/**
+ * Sets the operation that was performed on the table
+ * Easy way to follow a series of changes
+ * @param table the table being performed on
+ * @param list the list of operations being performed
+ */
+void Relation::setSelectName(Relation *table, std::list<std::pair<int, std::string>> list) {
+    std::string operators;
+    std::string complex;
+    operators.append("\u03C3");
+    operators.append("(");
+    for (auto &l : list) {
+        operators.append(std::to_string(l.first));
         operators.append("=");
         operators.append(l.second);
         operators.append("^");
@@ -234,6 +303,50 @@ Relation *Relation::select(std::list<std::pair<std::string, std::string>> list) 
             std::vector<std::string> newRow;
             for (auto &p : list) {
                 newRow.push_back(r.at(static_cast<unsigned long>(header[p.first]) - 1));
+            }
+            table->insertRows(r);
+        }
+    }
+    table->removeDuplicateEntries();
+    return table;
+}
+
+/**
+ * This function returns a new table based on the list of select paramaters
+ * input into the function call, can do both Col-Col and Col-Value selections
+ * @param list this is the list of pairs that the select must be performed on
+ * @return returns a new table based on the select
+ */
+Relation *Relation::select(std::list<std::pair<int, std::string>> list) {
+
+    auto table = new Relation();
+
+    setSelectName(table, list); // Helps make things look pretty when we print the table
+
+    table->header = header; // Copy the header over, they don't change
+
+    // Checks the columns in the table to see which ones are the same as the values provided
+    // Fancy smanshy stuff here
+    for (auto &r : rows) {
+        bool flag = true;
+        for (auto &p : list) {
+            if (header.find(p.second) != header.end()) {
+                // This is a column = column select
+                if (r.at(static_cast<unsigned long>(p.first)) != r.at(
+                        static_cast<unsigned long>(header[p.second] - 1))) {
+                    flag = false;
+                    break;
+                }
+            } else if (r.at(static_cast<unsigned long>(p.first)) != p.second) {
+                // This is a column = value select
+                flag = false;
+                break;
+            }
+        }
+        if (flag) { // if it is a match then we flag the row to add to the new table.
+            std::vector<std::string> newRow;
+            for (auto &p : list) {
+                newRow.push_back(r.at(static_cast<unsigned long>(p.first)));
             }
             table->insertRows(r);
         }

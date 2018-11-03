@@ -30,6 +30,9 @@ public:
         return os;
     }
 
+    std::string getName();
+
+//    std::vector<std::string> listOfFacts();
     std::vector<std::string> listTheStrings();
 
     void clean();

@@ -22,6 +22,8 @@ public:
         return os;
     }
 
+    const std::vector<Scheme*> getSchemes();
+
     void clean();
 };
 

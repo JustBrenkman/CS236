@@ -4,6 +4,7 @@
 
 #include "Schemes.h"
 
+
 Schemes::Schemes(std::vector<LexicalAnalyzer::token_struct> &list, unsigned int &index) {
     Utilities::checkFor(list, LexicalAnalyzer::SCHEMES, index);
     Utilities::checkFor(list, LexicalAnalyzer::COLON, index);
@@ -19,4 +20,8 @@ void Schemes::clean() {
         delete s;
     }
 
+}
+
+const std::vector<Scheme *> Schemes::getSchemes() {
+    return schemes;
 }

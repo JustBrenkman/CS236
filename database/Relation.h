@@ -101,6 +101,8 @@ private:
 
     void setSelectName(Relation *table, std::list<std::pair<std::string, std::string>> list);
 
+    void setSelectName(Relation *table, std::list<std::pair<int, std::string>> list);
+
     void setRenameName(Relation *table, std::list<std::pair<std::string, std::string>> list);
 
     void setProjectName(Relation *table, std::vector<std::string> list);
@@ -113,6 +115,8 @@ public:
     // Adds an arbitrary number of columns to the header
     template<typename ... Args>
     void addColumns(std::string first, Args... args);
+
+    void addColumns(std::vector<std::string> columns);
     void addColumns(std::string name);
 
     // Row insertion functions
@@ -123,9 +127,11 @@ public:
     template<typename ... pairs>
     Relation *select(std::pair<std::string, std::string> pair, pairs...args);
     Relation *select(std::list<std::pair<std::string, std::string>> pair);
+
+    Relation *select(std::list<std::pair<int, std::string>> pair);
     Relation *select(std::string columnName, std::string value);
 
-    // Project Functions
+    // Project Functions.find(queryCol.at(j))
     template<typename ... param>
     Relation *project(std::string colName, param... args);
     Relation *project(std::vector<std::string> cols);
@@ -142,7 +148,19 @@ public:
     bool operator==(const Relation &a);
 
     void setName(std::string an);
+
+    std::string getName();
     void removeDuplicateEntries();
+
+    std::vector<std::string> getheaders();
+
+    bool isEmpty();
+
+    int getRowCount();
+
+    std::vector<std::vector<std::string>> getRows();
+
+    std::unordered_map<std::string, int> getHeadersMap();
 
     static void setPrintCom(Relation::operationPrintComp com);
 };

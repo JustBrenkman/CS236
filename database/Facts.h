@@ -25,6 +25,8 @@ public:
 
     std::string toDomain();
 
+    std::vector<Fact *> getFacts();
+
     void clean();
 };
 

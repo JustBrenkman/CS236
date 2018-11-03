@@ -32,3 +32,7 @@ void Facts::clean() {
     }
 }
 
+std::vector<Fact *> Facts::getFacts() {
+    return facts;
+}
+
