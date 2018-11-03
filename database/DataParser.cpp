@@ -8,7 +8,6 @@ Purpose: Creates a list of inputs based on the input file
 #include "Facts.h"
 #include "Rules.h"
 #include "Queries.h"
-#include "database/Interpreter.h"
 
 #define CREATE_GRAMMAR Grammar<LexicalAnalyzer::TOKEN>::createGrammar
 #define CREATE_TERM Grammar<LexicalAnalyzer::TOKEN>::createTerm()
@@ -261,12 +260,6 @@ void DataParser::checkValidity() {
         facts.clean();
         rules.clean();
         queries.clean();
-
-        auto interp = Interpreter::generateRelations(facts);
-        Interpreter::proccessQueries(interp, queries);
-
-        std::cout << *interp << std::endl;
-        delete interp;
 
     } catch (std::string &e) {
         std::cout << "Failed: " << e << index << std::endl;

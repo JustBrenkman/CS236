@@ -18,4 +18,4 @@ set(CMAKE_CXX_FLAGS -Werror)
 
 file(GLOB SOURCE_FILES database/*.cpp database/*.h)
 
-add_executable(lab3 ${SOURCE_FILES})
+add_executable(lab3 ${SOURCE_FILES} database/Interpreter.cpp database/Interpreter.h)
