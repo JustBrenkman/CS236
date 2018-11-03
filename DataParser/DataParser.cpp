@@ -4,7 +4,6 @@ Purpose: Creates a list of inputs based on the input file
 */
 
 #include "DataParser.h"
-#include "../database/Interpreter.h"
 
 #define CREATE_GRAMMAR Grammar<LexicalAnalyzer::TOKEN>::createGrammar
 #define CREATE_TERM Grammar<LexicalAnalyzer::TOKEN>::createTerm()
