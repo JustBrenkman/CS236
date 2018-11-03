@@ -261,16 +261,15 @@ void DataParser::checkValidity() {
 
     } catch (std::string &e) {
         std::cout << "Failed: " << e << index << std::endl;
+    } catch (GrammarException &grammarException) {
+        // Just checking for those failed terms
+        std::cout << "Failure!" << std::endl;
+        std::string token = LexicalAnalyzer::enumToString(
+                listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).token);
+        int lineNumber = listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).lineNumber;
+        std::string tokenStr = listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).tokenStr;
+        std::cout << "  (" << token << ",\"" << tokenStr << "\"," << lineNumber << ")" << std::endl;
     }
-//  catch (GrammarException &grammarException) {
-//        // Just checking for those failed terms
-//        std::cout << "Failure!" << std::endl;
-//        std::string token = LexicalAnalyzer::enumToString(
-//                listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).token);
-//        int lineNumber = listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).lineNumber;
-//        std::string tokenStr = listOfTokens.at(static_cast<unsigned long>(grammarException.getIndex())).tokenStr;
-//        std::cout << "  (" << token << ",\"" << tokenStr << "\"," << lineNumber << ")" << std::endl;
-//    }
 }
 
 void DataParser::interperet(Schemes &schemes, Facts &facts, Rules &rules, Queries &queries) {

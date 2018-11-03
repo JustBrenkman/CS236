@@ -31,22 +31,25 @@ void Interpreter::proccessQueries(Interpreter *interpreter, Queries queries) {
             if (t->getName() == q->getName()) {
                 // Conduct query on this table
                 std::list<std::pair<std::string, std::string>> list;
+                std::vector<std::string> headers = t->getheaders();
                 for (unsigned int i = 0; i < q->getParams().size(); i++) {
-                    std::vector<std::string> headers = t->getheaders();
-                    list.emplace_back(headers.at(i), q->getParams().at(i));
+                    list.emplace_back(std::make_pair(headers.at(i),
+                                                     ((q->getParams().at(i).find("\'") != std::string::npos)
+                                                      ? q->getParams().at(i) : headers.at(i))));
                 }
                 std::cout << *q << "? ";
                 auto result = t->select(list);
                 std::cout << ((result->isEmpty()) ? "No" : "Yes(" + std::to_string(result->getRowCount()) + ")")
                           << std::endl;
-                interpreter->printResults(q, result);
+                if (!result->isEmpty())
+                    interpreter->printResults(q, result);
             }
         }
     }
 }
 
 void Interpreter::printResults(Query *query, Relation *table) {
-    if (!table->isEmpty()) {
+//    if (!table->isEmpty()) {
         std::unordered_map<std::string, int> headers = table->getHeadersMap();
         std::vector<std::vector<std::string>> rows = table->getRows();
         std::vector<std::string> queryCol = query->getParams();
@@ -54,18 +57,21 @@ void Interpreter::printResults(Query *query, Relation *table) {
             bool addSpacer = false;
             std::string result;
             for (unsigned int j = 0; j < queryCol.size(); j++) {
-                if (headers.find(queryCol.at(j)) != headers.end()) {
-                    result.append(((j == 0) ? "" : ","));
+                if (headers.find(queryCol.at(j)) != headers.end() || queryCol.at(j).find("\'") == std::string::npos) {
+                    result.append(((!addSpacer) ? "" : ","));
                     result.append(queryCol.at(j));
                     result.append("=");
                     result.append(row.at(j));
+                    std::string re = row.at(j);
+//                    if (re.at(re.size() - 1) != '\'')
+//                        result.append("\'");
                     addSpacer = true;
                 }
             }
             if (addSpacer)
                 std::cout << "  " << result << std::endl;
         }
-    }
+//    }
 }
 
 std::ostream &operator<<(std::ostream &os, Interpreter &interpreter) {
