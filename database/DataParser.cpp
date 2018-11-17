@@ -276,6 +276,7 @@ void DataParser::interperet(Schemes &schemes, Facts &facts, Rules &rules, Querie
     auto interp = Interpreter::generateRelations(schemes, facts);
     Interpreter::proccessQueries(interp, queries);
 //    std::cout << *interp << std::endl;
+    interp->clean();
     delete interp;
 }
 

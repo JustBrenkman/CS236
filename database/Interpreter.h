@@ -20,6 +20,10 @@ protected:
     void addRelation(Relation *relation);
 
     void printResults(Query *query, Relation *table);
+
+    Relation *proccessQueryOnTable(Query *query, Relation *table);
+
+    Relation *renameAndProject(Query *query, Relation *table);
 public:
 //    Interpreter();
     ~Interpreter();
@@ -29,6 +33,8 @@ public:
     static void proccessQueries(Interpreter *interpreter, Queries queries);
 
     friend std::ostream &operator<<(std::ostream &os, Interpreter &interpreter);
+
+    void clean();
 };
 
 

@@ -30,7 +30,7 @@ std::string Relation::getName() {
 }
 
 bool Relation::isEmpty() {
-    return rows.empty();
+    return rows.empty() || header.empty();
 }
 
 int Relation::getRowCount() {
@@ -43,6 +43,10 @@ std::vector<std::vector<std::string>> Relation::getRows() {
 
 std::unordered_map<std::string, int> Relation::getHeadersMap() {
     return header;
+}
+
+bool Relation::isAColumn(std::string name) {
+    return header.find(name) != header.end();
 }
 
 std::vector<std::string> Relation::getheaders() {

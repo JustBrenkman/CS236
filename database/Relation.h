@@ -163,6 +163,8 @@ public:
     std::unordered_map<std::string, int> getHeadersMap();
 
     static void setPrintCom(Relation::operationPrintComp com);
+
+    bool isAColumn(std::string name);
 };
 
 // Adds an arbitrary number of columns
