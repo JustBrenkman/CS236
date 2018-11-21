@@ -109,6 +109,8 @@ private:
 
     void reorder();
 
+    std::string getValueAtCol(std::vector<std::string> row, std::string col);
+
 public:
     Relation();
     Relation(const Relation &reftable);

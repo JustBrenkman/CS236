@@ -530,9 +530,34 @@ bool Relation::operator==(const Relation &a) {
  * @return - new table holding the result
  */
 Relation *Relation::Union(Relation *table) {
-    auto result = new Relation();
+    // First check to see if it is union compatible
+    bool comp = true;
+    if (getheaders().size() != table->getheaders().size())
+    for (auto &e : getheaders()) {
+        bool found = false;
+        for (auto &o : table->getheaders()) {
+            if (e == o) found = true;
+        }
+        if (!found) comp = false;
+    }
+
+    if (comp) {
+        auto result = new Relation();
+        result->header = header;
+        result->insertRows(rows);
+        for (auto & r : table->rows) {
+            std::vector<std::string> rowToAdd;
+            for (auto & h : getheaders()) {
+                rowToAdd.push_back(r.at(table->header[h] - 1));
+            }
+            result->insertRows(rowToAdd);
+        }
+        result->removeDuplicateEntries();
+        return result;
+    } else {
+        return nullptr;
+    }
 //    reorder();
-    return result;
 }
 
 /**
@@ -550,9 +575,10 @@ Relation *Relation::join(Relation *table) {
     for (auto &h : headers) {
         if (table->header.find(h) != table->header.end()) {
             col.push_back(h);
-            std::cout << h;
+//            std::cout << h;
         }
     }
+//    std::cout << "Columns" << std::endl;
 
     result->header = header;
     for (auto &h : table->getheaders()) {
@@ -560,21 +586,41 @@ Relation *Relation::join(Relation *table) {
         for (auto &c : col) {
             if (c == h) canAdd = false;
         }
-        result->header[h] = header.size();
+        if (canAdd) result->header[h] = header.size() + 1;
     }
+//    std::cout << "H" << std::endl;
+
     // Second check the values, if they are equivalent, then they are the same
     for (auto &r : rows) {
+//        std::cout << "B" << std::endl;
+
         for (auto &ri : table->rows) {
             bool addCol = true;
             for (auto &c : col) {
-                if (r.at(header[c]) != ri.at(table->header[c])) addCol = false;
+//                std::cout << "B1" << std::endl;
+//                std::cout << header[c] - 1 << ", " << table->header[c] - 1 << std::endl;
+                if (r.at(header[c] - 1) != ri.at(table->header[c] - 1)) addCol = false;
             }
+//            std::cout << "H1" << std::endl;
+
             if (addCol) {
-//                result->insertRows();
+//                std::cout << "Adding Column" << std::endl;
+                std::vector<std::string> rowToAdd;
+                for (auto &rj : result->getheaders()) {
+                    if (header.find(rj) != header.end()) {
+                        rowToAdd.push_back(r.at(header[rj] - 1));
+                    } else if (table->header.find(rj) != table->header.end()) {
+                        rowToAdd.push_back(ri.at(table->header[rj] - 1));
+                    }
+                }
+//                std::cout << "H2" << std::endl;
+
+                result->insertRows(rowToAdd);
             }
         }
     }
 
+//    std::cout << "Done" << std::endl;
     return result;
 }
 
