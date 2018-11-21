@@ -31,6 +31,9 @@ public:
     }
 
     void clean();
+
+    std::string getName() {return id->toString();};
+    std::vector<std::string> getParams();
 };
 
 

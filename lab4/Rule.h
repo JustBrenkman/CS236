@@ -30,6 +30,10 @@ public:
     }
 
     void clean();
+
+    std::vector<Predicate*> getPredicates();
+    HeadPredicate* getHeadPredicate();
+
 };
 
 

@@ -6,7 +6,7 @@
 
 Interpreter::~Interpreter() = default;
 
-Interpreter *Interpreter::generateRelations(Schemes &schemes, Facts &facts) {
+Interpreter *Interpreter::generateRelations(Schemes &schemes, Facts &facts, Rules& rules) {
     auto interp = new Interpreter();
 
     for (auto &s : schemes.getSchemes()) {
@@ -19,13 +19,54 @@ Interpreter *Interpreter::generateRelations(Schemes &schemes, Facts &facts) {
                 relation->insertRows(f->listTheStrings());
             }
         }
+
+        // Process every single rule
+        std::cout << "Processing rules" << std::endl;
+        for (auto &r : rules.getRules())
+            interp->processRule(relation, r);
+
         interp->addRelation(relation);
     }
 
     return interp;
 }
 
+void Interpreter::processRule(Relation *table, Rule *rule) {
+    std::cout << "Processing Rule" << std::endl;
+    for (auto &p : rule->getPredicates()) {
+        auto result = proccessPredicateOnTable(p, table);
+        std::cout << *result << std::endl;
+    }
+}
+
 Relation *Interpreter::proccessQueryOnTable(Query *q, Relation *t) {
+    std::list<std::pair<std::string, std::string>> list; // Select parameters
+    std::vector<std::string> headers = t->getheaders(); // the headers of the table
+    std::unordered_map<std::string, std::string> variables;
+    for (unsigned int i = 0; i < q->getParams().size(); i++) {
+        // Check if they are variables
+        if (q->getParams().at(i).find('\'') != std::string::npos ||
+            t->isAColumn(q->getParams().at(i))) { // Check if it is a constant or not
+            list.emplace_back(std::make_pair(headers.at(i), ((q->getParams().at(i).find('\'') != std::string::npos)
+                                                             ? q->getParams().at(i) : headers.at(i))));
+        } else {
+            // It is a variable
+            if (variables.find(q->getParams().at(i)) != variables.end()) {
+                list.emplace_back(std::make_pair(variables[q->getParams().at((i))], headers.at(i)));
+            } else {
+                variables[q->getParams().at(i)] = headers.at(i);
+            }
+        }
+    }
+    std::cout << *q << "? ";
+    auto result = t->select(list);
+    std::cout << ((result->isEmpty()) ? "No" : "Yes(" + std::to_string(result->getRowCount()) + ")")
+              << std::endl;
+
+    return result;
+}
+
+Relation *Interpreter::proccessPredicateOnTable(Predicate *q, Relation *t) {
     std::list<std::pair<std::string, std::string>> list; // Select parameters
     std::vector<std::string> headers = t->getheaders(); // the headers of the table
     std::unordered_map<std::string, std::string> variables;

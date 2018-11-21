@@ -23,6 +23,7 @@ public:
         return os;
     }
 
+    std::vector<Rule*> getRules() { return rules; };
     void clean();
 };
 

@@ -273,7 +273,7 @@ void DataParser::checkValidity() {
 }
 
 void DataParser::interperet(Schemes &schemes, Facts &facts, Rules &rules, Queries &queries) {
-    auto interp = Interpreter::generateRelations(schemes, facts);
+    auto interp = Interpreter::generateRelations(schemes, facts, rules);
     Interpreter::proccessQueries(interp, queries);
 //    std::cout << *interp << std::endl;
     interp->clean();

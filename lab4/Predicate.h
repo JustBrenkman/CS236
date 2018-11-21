@@ -29,6 +29,8 @@ public:
     }
 
     void clean();
+    virtual std::vector<std::string> getParams();
+    std::string getName();
 };
 
 

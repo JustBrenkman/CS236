@@ -26,3 +26,11 @@ void HeadPredicate::clean() {
         delete i;
 
 }
+
+std::vector<std::string> HeadPredicate::getParams() {
+    std::vector<std::string> params;
+    for (auto &d : ids) {
+        params.push_back(d->toString());
+    }
+    return params;
+}

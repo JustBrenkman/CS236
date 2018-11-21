@@ -25,3 +25,15 @@ void Predicate::clean() {
         delete p;
     }
 }
+
+std::vector<std::string> Predicate::getParams() {
+    std::vector<std::string> list;
+    for (auto &p : parameters) {
+        list.push_back(p->toString());
+    }
+    return list;
+}
+
+std::string Predicate::getName() {
+    return id->toString();
+}

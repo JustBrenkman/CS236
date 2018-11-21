@@ -53,7 +53,7 @@ std::vector<std::string> Relation::getheaders() {
     std::vector<std::string> list;
 //    std::cout << "List size:" << list.size() << std::endl;
     for (unsigned int i = 0; i < header.size(); i++)
-        list.push_back("");
+        list.emplace_back("");
 
     for (auto &h :header) {
 //        std::cout << h.second << std::endl;
@@ -147,7 +147,7 @@ void Relation::setSelectName(Relation *table, std::list<std::pair<std::string, s
     operators.append("(");
     complex = operators;
     operators.append(this->name);
-    complex.append((this->operation == "") ? this->name : this->operation);
+    complex.append((this->operation.empty()) ? this->name : this->operation);
     operators.append(")");
     operators.append(")");
     complex.append(")");
@@ -178,7 +178,7 @@ void Relation::setSelectName(Relation *table, std::list<std::pair<int, std::stri
     operators.append("(");
     complex = operators;
     operators.append(this->name);
-    complex.append((this->operation == "") ? this->name : this->operation);
+    complex.append((this->operation.empty()) ? this->name : this->operation);
     operators.append(")");
     operators.append(")");
     complex.append(")");
@@ -209,7 +209,7 @@ void Relation::setRenameName(Relation *table, std::list<std::pair<std::string, s
     operators.append("(");
     complex = operators;
     operators.append(this->name);
-    complex.append((this->operation == "") ? this->name : this->operation);
+    complex.append((this->operation.empty()) ? this->name : this->operation);
     operators.append(")");
     operators.append(")");
     complex.append(")");
@@ -238,7 +238,7 @@ void Relation::setProjectName(Relation *table, std::vector<std::string> list) {
     operators.append("(");
     complex = operators;
     operators.append(this->name);
-    complex.append((this->operation == "") ? this->name : this->operation);
+    complex.append((this->operation.empty()) ? this->name : this->operation);
     operators.append(")");
     operators.append(")");
     complex.append(")");

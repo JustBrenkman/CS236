@@ -10,6 +10,7 @@
 #include "Queries.h"
 #include "Schemes.h"
 #include "Relation.h"
+#include "../lab4/Rules.h"
 
 class Interpreter {
 private:
@@ -22,13 +23,15 @@ protected:
     void printResults(Query *query, Relation *table);
 
     Relation *proccessQueryOnTable(Query *query, Relation *table);
+    Relation *proccessPredicateOnTable(Predicate *query, Relation *table);
 
     Relation *renameAndProject(Query *query, Relation *table);
+    void processRule(Relation* table, Rule *rule);
 public:
 //    Interpreter();
     ~Interpreter();
 
-    static Interpreter *generateRelations(Schemes &schemes, Facts &facts);
+    static Interpreter *generateRelations(Schemes &schemes, Facts &facts, Rules &rules);
 
     static void proccessQueries(Interpreter *interpreter, Queries queries);
 

@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
             // Create a file stream to pull in the file data
             std::ifstream file(argv[FILE_INPUT]);
 
-            //std::cout << "Opening File: " << argv[FILE_INPUT] << std::endl;
+//            std::cout << "Opening File: " << argv[FILE_INPUT] << std::endl;
 
             std::string str;
             // Copy over the whole file into the string we just created
@@ -48,6 +48,7 @@ int main(int argc, char **argv) {
             DataParser dataParser(lex);
             try {
                 // This checks the validity and throws an error if not
+                std::cout << "Checking data parser" << std::endl;
                 dataParser.checkValidity();
             } catch (std::string &e) {
                 std::cout << "Invalid: " << e << std::endl;

@@ -3,6 +3,8 @@
 //
 
 #include "Rule.h"
+#include "../lab4/Rule.h"
+
 
 Rule::Rule(std::vector<LexicalAnalyzer::token_struct> &list, unsigned int &index) : predicate() {
     headPredicate = new HeadPredicate(list, index);
@@ -25,4 +27,8 @@ void Rule::clean() {
         p->clean();
         delete p;
     }
+}
+
+std::vector<Predicate*> Rule::getPredicates() {
+    return predicate;
 }

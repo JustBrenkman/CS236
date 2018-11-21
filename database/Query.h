@@ -13,7 +13,7 @@ public:
 
     std::string getName();
 
-    std::vector<std::string> getParams();
+    std::vector<std::string> getParams() override;
 };
 
 

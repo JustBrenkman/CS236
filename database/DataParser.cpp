@@ -251,7 +251,7 @@ void DataParser::checkValidity() {
         Rules rules(listOfTokens, next);
         Queries queries(listOfTokens, next);
 
-//        std::cout << schemes << facts << rules << queries << facts.toDomain() << std::endl;
+        std::cout << schemes << facts << rules << queries << facts.toDomain() << std::endl;
         interperet(schemes, facts, rules, queries);
 
         schemes.clean();
@@ -273,7 +273,7 @@ void DataParser::checkValidity() {
 }
 
 void DataParser::interperet(Schemes &schemes, Facts &facts, Rules &rules, Queries &queries) {
-    auto interp = Interpreter::generateRelations(schemes, facts);
+    auto interp = Interpreter::generateRelations(schemes, facts, rules);
     Interpreter::proccessQueries(interp, queries);
 //    std::cout << *interp << std::endl;
     interp->clean();
