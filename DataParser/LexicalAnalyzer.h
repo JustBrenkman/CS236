@@ -2,6 +2,7 @@
 #define LEXICAL_ANALYZER_H
 
 #include <iostream>
+#include <string>
 #include "FiniteStateMachine.h"
 
 /*******************************************************************************************

@@ -13,7 +13,8 @@ void LexicalAnalyzer::advanceToken() {
 }
 
 bool LexicalAnalyzer::isAtEnd() {
-    if (curretntItr != listOfTokens.end());
+    if (curretntItr != listOfTokens.end())
+        return true;
 
-    return true;
+    return false;
 }

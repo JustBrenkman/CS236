@@ -2,6 +2,7 @@
 // Created by bbrenk on 10/15/18.
 //
 
+#include <algorithm>
 #include "Domain.h"
 
 Domain::Domain() = default;
