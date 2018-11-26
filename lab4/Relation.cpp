@@ -557,7 +557,8 @@ Relation *Relation::Union(Relation *table) {
 //    } else {
 //        return nullptr;
 //    }
-//    reorder();
+    reorder();
+    table->reorder();
     auto result = new Relation();
     if (header.size() == table->header.size()) {
         result->setName(table->getName());
@@ -635,7 +636,7 @@ Relation *Relation::join(Relation *table) {
 
 std::vector<std::vector<int>> Relation::getSameColumns(Relation* table) {
     std::vector<int> simRow1, simRow2;
-    for (int i = 0; i < getheaders().size(); i++) {
+    for (unsigned int i = 0; i < getheaders().size(); i++) {
         if (table->header.find(getheaders().at(i)) != table->header.end()) {
             simRow1.push_back(i);
             simRow2.push_back(table->header[getheaders().at(i)]);
