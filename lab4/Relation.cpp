@@ -531,33 +531,46 @@ bool Relation::operator==(const Relation &a) {
  */
 Relation *Relation::Union(Relation *table) {
     // First check to see if it is union compatible
-    bool comp = true;
-    if (getheaders().size() != table->getheaders().size())
-    for (auto &e : getheaders()) {
-        bool found = false;
-        for (auto &o : table->getheaders()) {
-            if (e == o) found = true;
-        }
-        if (!found) comp = false;
-    }
-
-    if (comp) {
-        auto result = new Relation();
-        result->header = header;
-        result->insertRows(rows);
-        for (auto & r : table->rows) {
-            std::vector<std::string> rowToAdd;
-            for (auto & h : getheaders()) {
-                rowToAdd.push_back(r.at(table->header[h] - 1));
-            }
-            result->insertRows(rowToAdd);
-        }
-        result->removeDuplicateEntries();
-        return result;
-    } else {
-        return nullptr;
-    }
+//    bool comp = true;
+//    if (getheaders().size() != table->getheaders().size())
+//    for (auto &e : getheaders()) {
+//        bool found = false;
+//        for (auto &o : table->getheaders()) {
+//            if (e == o) found = true;
+//        }
+//        if (!found) comp = false;
+//    }
+//
+//    if (comp) {
+//        auto result = new Relation();
+//        result->header = header;
+//        result->insertRows(rows);
+//        for (auto & r : table->rows) {
+//            std::vector<std::string> rowToAdd;
+//            for (auto & h : getheaders()) {
+//                rowToAdd.push_back(r.at(table->header[h] - 1));
+//            }
+//            result->insertRows(rowToAdd);
+//        }
+//        result->removeDuplicateEntries();
+//        return result;
+//    } else {
+//        return nullptr;
+//    }
 //    reorder();
+    auto result = new Relation();
+    if (header.size() == table->header.size()) {
+        result->setName(table->getName());
+//        for (auto &c : getheaders()) {
+//            result->addColumns(c);
+//        }
+        result->addColumns(getheaders());
+        result->insertRows(getRows());
+        result->insertRows(table->getRows());
+        result->removeDuplicateEntries();
+//     insertRows(table->getRows());
+    }
+    return result;
 }
 
 /**
@@ -575,10 +588,8 @@ Relation *Relation::join(Relation *table) {
     for (auto &h : headers) {
         if (table->header.find(h) != table->header.end()) {
             col.push_back(h);
-//            std::cout << h;
         }
     }
-//    std::cout << "Columns" << std::endl;
 
     result->header = header;
     for (auto &h : table->getheaders()) {
@@ -586,42 +597,110 @@ Relation *Relation::join(Relation *table) {
         for (auto &c : col) {
             if (c == h) canAdd = false;
         }
-        if (canAdd) result->header[h] = header.size() + 1;
+        if (canAdd) result->header[h] = result->header.size() + 1;
     }
-//    std::cout << "H" << std::endl;
 
     // Second check the values, if they are equivalent, then they are the same
     for (auto &r : rows) {
-//        std::cout << "B" << std::endl;
-
         for (auto &ri : table->rows) {
             bool addCol = true;
-            for (auto &c : col) {
-//                std::cout << "B1" << std::endl;
-//                std::cout << header[c] - 1 << ", " << table->header[c] - 1 << std::endl;
-                if (r.at(header[c] - 1) != ri.at(table->header[c] - 1)) addCol = false;
-            }
-//            std::cout << "H1" << std::endl;
-
-            if (addCol) {
-//                std::cout << "Adding Column" << std::endl;
-                std::vector<std::string> rowToAdd;
-                for (auto &rj : result->getheaders()) {
-                    if (header.find(rj) != header.end()) {
-                        rowToAdd.push_back(r.at(header[rj] - 1));
-                    } else if (table->header.find(rj) != table->header.end()) {
-                        rowToAdd.push_back(ri.at(table->header[rj] - 1));
-                    }
+            if (col.size() > 0) {
+                for (auto &c : col) {
+                    if (r.at(header[c] - 1) != ri.at(table->header[c] - 1)) addCol = false;
                 }
-//                std::cout << "H2" << std::endl;
 
+                if (addCol) {
+                    std::vector<std::string> rowToAdd;
+                    for (auto &rj : result->getheaders()) {
+                        if (header.find(rj) != header.end()) {
+                            rowToAdd.push_back(r.at(header[rj] - 1));
+                        } else if (table->header.find(rj) != table->header.end()) {
+                            rowToAdd.push_back(ri.at(table->header[rj] - 1));
+                        }
+                    }
+
+                    result->insertRows(rowToAdd);
+                }
+            } else {
+                std::vector<std::string> rowToAdd;
+                rowToAdd.reserve(r.size() + ri.size());
+                rowToAdd.insert(rowToAdd.end(), r.begin(), r.end());
+                rowToAdd.insert(rowToAdd.end(), ri.begin(), ri.end());
                 result->insertRows(rowToAdd);
             }
         }
     }
-
-//    std::cout << "Done" << std::endl;
     return result;
+}
+
+std::vector<std::vector<int>> Relation::getSameColumns(Relation* table) {
+    std::vector<int> simRow1, simRow2;
+    for (int i = 0; i < getheaders().size(); i++) {
+        if (table->header.find(getheaders().at(i)) != table->header.end()) {
+            simRow1.push_back(i);
+            simRow2.push_back(table->header[getheaders().at(i)]);
+        }
+    }
+    std::vector<std::vector<int>> result;
+    result.push_back(simRow1);
+    result.push_back(simRow2);
+    return result;
+}
+
+Relation *Relation::hashJoin(Relation *table) {
+    unsigned int size1 = this->size();
+    unsigned int size2 = table->size();
+    std::vector<std::vector<std::string>> a;
+    std::vector<std::vector<std::string>> b;
+    size_t columna;
+    size_t columnb;
+    std::vector<std::vector<int>> columnMatches = getSameColumns(table);
+
+    if (size1 <= size2) {
+        a = getRows();
+        b = table->getRows();
+        columna = 1;
+        columnb = 1;
+    } else {
+        b = getRows();
+        a = table->getRows();
+        columnb = 1;
+        columna = 1;
+    }
+
+    std::vector<std::unordered_multimap<std::string, size_t >> hashmaps;
+    std::unordered_multimap<std::string, size_t> hashmap;
+    // hash
+    for (size_t j = 0; j < columnMatches.at(0).size(); ++j) {
+        std::unordered_multimap<std::string, size_t> hashmap;
+        for(size_t i = 0; i < a.size(); ++i) {
+            hashmap.insert(std::make_pair(a[i][columna], i));
+        }
+        hashmaps.push_back(hashmap);
+    }
+//    for(size_t i = 0; i < a.size(); ++i) {
+//        hashmap.insert(std::make_pair(a[i][columna], i));
+//    }
+    // map
+    std::vector<std::vector<std::string>> result;
+    for(size_t i = 0; i < b.size(); ++i) {
+        for (auto &h: hashmaps) {
+            auto range = h.equal_range(b[i][columnb]);
+            for(auto it = range.first; it != range.second; ++it) {
+                std::vector<std::vector<std::string>>::value_type row;
+                row.insert(row.end() , a[it->second].begin() , a[it->second].end());
+                row.insert(row.end() , b[i].begin()          , b[i].end());
+                result.push_back(std::move(row));
+            }
+        }
+    }
+
+    auto re = new Relation();
+    re->addColumns(getheaders());
+    re->addColumns(table->getheaders());
+    re->insertRows(result);
+//    re->removeDuplicateEntries();
+    return re;
 }
 
 /**
@@ -639,4 +718,11 @@ void Relation::reorder() {
         std::cout << h;
         count++;
     }
+}
+
+unsigned int Relation::size() {
+    unsigned int totalSize = 0;
+    for (auto &r: rows)
+        totalSize += r.size();
+    return totalSize;
 }

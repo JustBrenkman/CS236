@@ -111,6 +111,10 @@ private:
 
     std::string getValueAtCol(std::vector<std::string> row, std::string col);
 
+    unsigned int size();
+
+    std::vector<std::vector<int>> getSameColumns(Relation* table);
+
 public:
     Relation();
     Relation(const Relation &reftable);
@@ -149,6 +153,7 @@ public:
 
     Relation *Union(Relation *table);
     Relation *join(Relation* table);
+    Relation *hashJoin(Relation* table);
 
     friend std::ostream &operator<<(std::ostream &os, Relation &table);
 

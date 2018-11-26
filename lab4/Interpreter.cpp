@@ -56,8 +56,9 @@ void Interpreter::processRule(Rule *rule) {
 
     for (auto &t : relations) {
         if (rule->getHeadPredicate()->getName() == t->getName()) {
-            t = t->Union(final);
             std::cout << *t << std::endl;
+            std::cout << *final << std::endl;
+            t = t->Union(final);
             break;
         }
     }
