@@ -24,7 +24,7 @@ Interpreter *Interpreter::generateRelations(Schemes &schemes, Facts &facts, Rule
     }
 
     // Process every single rule
-    std::cout << "Processing rules" << std::endl;
+//    std::cout << "Processing rules" << std::endl;
     for (auto &r : rules.getRules())
         interp->processRule(r);
 
@@ -32,15 +32,15 @@ Interpreter *Interpreter::generateRelations(Schemes &schemes, Facts &facts, Rule
 }
 
 void Interpreter::processRule(Rule *rule) {
-    std::cout << "Processing Rule" << std::endl;
+//    std::cout << "Processing Rule" << std::endl;
     std::vector<Relation*> results;
     for (auto &p : rule->getPredicates()) {
-        std::cout << "Processing predicate: " << *p << std::endl;
+//        std::cout << "Processing predicate: " << *p << std::endl;
         auto result = processPredicateOnTable(p, getTableByName(p->getName()));
         auto result1 = renameAndProject(p, result);
         results.push_back(result1);
         delete result;
-        std::cout << *result1 << std::endl;
+//        std::cout << *result1 << std::endl;
     }
 
     Relation* re = results.at(0);
@@ -52,17 +52,27 @@ void Interpreter::processRule(Rule *rule) {
         }
     }
     Relation* final = renameAndProject(rule->getHeadPredicate(), re);
+//    std::cout << "Result: " << *final << std::endl << rule->getHeadPredicate()->getName() << std::endl;
     Relation* finalJoined;
 
+    bool found = false;
     for (auto &t : relations) {
         if (rule->getHeadPredicate()->getName() == t->getName()) {
-            std::cout << *t << std::endl;
-            std::cout << *final << std::endl;
+//            std::cout << *t << std::endl;
+//            std::cout << *final << std::endl;
+            std::string name = t->getName();
             t = t->Union(final);
+            t->setName(name);
+            found = true;
             break;
         }
     }
 
+    if (!found) {
+        final->setName(rule->getHeadPredicate()->getName());
+        relations.push_back(final);
+//        std::cout << "Results: " << *final << std::endl;
+    }
 //    std::cout << *finalJoined << std::endl;
 }
 
